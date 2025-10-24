@@ -6,8 +6,8 @@ on:
     types: [opened, synchronize, reopened]
 
 env:
-  PSCALE_ORG: ${{ secrets.PSCALE_ORG_NAME }}
-  PSCALE_DB: ${{ secrets.PSCALE_DATABASE_NAME }}
+  PLANETSCALE_ORG: ${{ secrets.PLANETSCALE_ORG_NAME }}
+  PLANETSCALE_DB: ${{ secrets.PLANETSCALE_DATABASE_NAME }}
 
 jobs:
   preview:
@@ -51,16 +51,16 @@ jobs:
           BRANCH="${{ steps.branch-name.outputs.name }}"
           
           # Check if branch exists
-          if pscale branch show "$PSCALE_DB" "$BRANCH" --org "$PSCALE_ORG" 2>/dev/null; then
+          if pscale branch show "$PLANETSCALE_DB" "$BRANCH" --org "$PLANETSCALE_ORG" 2>/dev/null; then
             echo "✅ Branch already exists"
           else
             echo "🔄 Creating new branch from staging..."
-            pscale branch create "$PSCALE_DB" "$BRANCH" --from staging --org "$PSCALE_ORG"
+            pscale branch create "$PLANETSCALE_DB" "$BRANCH" --from staging --org "$PLANETSCALE_ORG"
             
             # Wait for branch to be ready
             echo "⏳ Waiting for branch to be ready..."
             for i in {1..30}; do
-              STATUS=$(pscale branch show "$PSCALE_DB" "$BRANCH" --org "$PSCALE_ORG" --format json | jq -r '.ready')
+              STATUS=$(pscale branch show "$PLANETSCALE_DB" "$BRANCH" --org "$PLANETSCALE_ORG" --format json | jq -r '.ready')
               if [ "$STATUS" = "true" ]; then
                 echo "✅ Branch is ready!"
                 break
@@ -74,14 +74,14 @@ jobs:
       - name: Create database password
         id: db-password
         env:
-          PSCALE_SERVICE_TOKEN_ID: ${{ secrets.PSCALE_SERVICE_TOKEN_ID }}
-          PSCALE_SERVICE_TOKEN: ${{ secrets.PSCALE_SERVICE_TOKEN }}
+          PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+          PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
         run: |
           BRANCH="${{ steps.branch-name.outputs.name }}"
           
           # Create a password (returns JSON with connection details)
-          PASSWORD_JSON=$(pscale password create "$PSCALE_DB" "$BRANCH" "preview-${{ github.run_id }}" \
-            --org "$PSCALE_ORG" --format json --role admin)
+          PASSWORD_JSON=$(pscale password create "$PLANETSCALE_DB" "$BRANCH" "preview-${{ github.run_id }}" \
+            --org "$PLANETSCALE_ORG" --format json --role admin)
           
           # Extract connection details
           HOST=$(echo "$PASSWORD_JSON" | jq -r '.hostname')
@@ -89,7 +89,7 @@ jobs:
           PASSWORD=$(echo "$PASSWORD_JSON" | jq -r '.plain_text')
           
           # Build PostgreSQL connection string
-          DATABASE_URL="postgresql://${USERNAME}:${PASSWORD}@${HOST}/${PSCALE_DB}?sslmode=require"
+          DATABASE_URL="postgresql://${USERNAME}:${PASSWORD}@${HOST}/${PLANETSCALE_DB}?sslmode=require"
           
           # Mask the password in logs
           echo "::add-mask::$PASSWORD"
@@ -186,12 +186,12 @@ jobs:
 
       - name: Delete PlanetScale branch
         env:
-          PSCALE_SERVICE_TOKEN_ID: ${{ secrets.PSCALE_SERVICE_TOKEN_ID }}
-          PSCALE_SERVICE_TOKEN: ${{ secrets.PSCALE_SERVICE_TOKEN }}
+          PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+          PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
         run: |
           BRANCH_NAME=$(echo "${{ github.head_ref }}" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]/-/g')
           
-          pscale branch delete "${{ secrets.PSCALE_DATABASE_NAME }}" "$BRANCH_NAME" \
-            --org "${{ secrets.PSCALE_ORG_NAME }}" --force || true
+          pscale branch delete "${{ secrets.PLANETSCALE_DATABASE_NAME }}" "$BRANCH_NAME" \
+            --org "${{ secrets.PLANETSCALE_ORG_NAME }}" --force || true
           
           echo "✅ Branch $BRANCH_NAME deleted"

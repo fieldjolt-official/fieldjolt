@@ -5,9 +5,9 @@ on:
     branches: [main]
 
 env:
-  PSCALE_ORG: ${{ secrets.PSCALE_ORG_NAME }}
-  PSCALE_DB: ${{ secrets.PSCALE_DATABASE_NAME }}
-  PSCALE_BRANCH: main
+  PLANETSCALE_ORG: ${{ secrets.PLANETSCALE_ORG_NAME }}
+  PLANETSCALE_DB: ${{ secrets.PLANETSCALE_DATABASE_NAME }}
+  PLANETSCALE_BRANCH: main
 
 jobs:
   deploy:
@@ -37,12 +37,12 @@ jobs:
       - name: Create deploy request
         id: deploy-request
         env:
-          PSCALE_SERVICE_TOKEN_ID: ${{ secrets.PSCALE_SERVICE_TOKEN_ID }}
-          PSCALE_SERVICE_TOKEN: ${{ secrets.PSCALE_SERVICE_TOKEN }}
+          PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+          PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
         run: |
           # Create deploy request
-          DR_NUMBER=$(pscale deploy-request create "$PSCALE_DB" "$PSCALE_BRANCH" \
-            --org "$PSCALE_ORG" --format json | jq -r '.number')
+          DR_NUMBER=$(pscale deploy-request create "$PLANETSCALE_DB" "$PLANETSCALE_BRANCH" \
+            --org "$PLANETSCALE_ORG" --format json | jq -r '.number')
           
           echo "number=$DR_NUMBER" >> $GITHUB_OUTPUT
           echo "📝 Deploy request #$DR_NUMBER created"
@@ -50,8 +50,8 @@ jobs:
           # Get schema diff
           echo "## Schema Changes" > dr-diff.txt
           echo '```diff' >> dr-diff.txt
-          pscale deploy-request diff "$PSCALE_DB" "$DR_NUMBER" \
-            --org "$PSCALE_ORG" --format json | jq -r '.[].raw' >> dr-diff.txt || echo "No changes" >> dr-diff.txt
+          pscale deploy-request diff "$PLANETSCALE_DB" "$DR_NUMBER" \
+            --org "$PLANETSCALE_ORG" --format json | jq -r '.[].raw' >> dr-diff.txt || echo "No changes" >> dr-diff.txt
           echo '```' >> dr-diff.txt
           
           cat dr-diff.txt
@@ -59,13 +59,13 @@ jobs:
       # Wait for manual approval or auto-approve if no breaking changes
       - name: Deploy schema changes
         env:
-          PSCALE_SERVICE_TOKEN_ID: ${{ secrets.PSCALE_SERVICE_TOKEN_ID }}
-          PSCALE_SERVICE_TOKEN: ${{ secrets.PSCALE_SERVICE_TOKEN }}
+          PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+          PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
         run: |
           DR_NUMBER="${{ steps.deploy-request.outputs.number }}"
           
           # Deploy the request (this applies the schema changes)
-          pscale deploy-request deploy "$PSCALE_DB" "$DR_NUMBER" --org "$PSCALE_ORG"
+          pscale deploy-request deploy "$PLANETSCALE_DB" "$DR_NUMBER" --org "$PLANETSCALE_ORG"
           
           echo "✅ Schema changes deployed to production"
 
@@ -73,17 +73,17 @@ jobs:
       - name: Get production database password
         id: db-password
         env:
-          PSCALE_SERVICE_TOKEN_ID: ${{ secrets.PSCALE_SERVICE_TOKEN_ID }}
-          PSCALE_SERVICE_TOKEN: ${{ secrets.PSCALE_SERVICE_TOKEN }}
+          PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+          PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
         run: |
-          PASSWORD_JSON=$(pscale password create "$PSCALE_DB" "$PSCALE_BRANCH" "prod-deploy-${{ github.run_id }}" \
-            --org "$PSCALE_ORG" --format json --role admin)
+          PASSWORD_JSON=$(pscale password create "$PLANETSCALE_DB" "$PLANETSCALE_BRANCH" "prod-deploy-${{ github.run_id }}" \
+            --org "$PLANETSCALE_ORG" --format json --role admin)
           
           HOST=$(echo "$PASSWORD_JSON" | jq -r '.hostname')
           USERNAME=$(echo "$PASSWORD_JSON" | jq -r '.username')
           PASSWORD=$(echo "$PASSWORD_JSON" | jq -r '.plain_text')
           
-          DATABASE_URL="postgresql://${USERNAME}:${PASSWORD}@${HOST}/${PSCALE_DB}?sslmode=require"
+          DATABASE_URL="postgresql://${USERNAME}:${PASSWORD}@${HOST}/${PLANETSCALE_DB}?sslmode=require"
           
           echo "::add-mask::$PASSWORD"
           echo "::add-mask::$DATABASE_URL"

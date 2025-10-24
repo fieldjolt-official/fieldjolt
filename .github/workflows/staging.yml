@@ -5,9 +5,9 @@ on:
     branches: [staging]
 
 env:
-  PSCALE_ORG: ${{ secrets.PSCALE_ORG_NAME }}
-  PSCALE_DB: ${{ secrets.PSCALE_DATABASE_NAME }}
-  PSCALE_BRANCH: staging
+  PLANETSCALE_ORG: ${{ secrets.PLANETSCALE_ORG_NAME }}
+  PLANETSCALE_DB: ${{ secrets.PLANETSCALE_DATABASE_NAME }}
+  PLANETSCALE_BRANCH: staging
 
 jobs:
   deploy:
@@ -36,18 +36,18 @@ jobs:
       - name: Get staging database password
         id: db-password
         env:
-          PSCALE_SERVICE_TOKEN_ID: ${{ secrets.PSCALE_SERVICE_TOKEN_ID }}
-          PSCALE_SERVICE_TOKEN: ${{ secrets.PSCALE_SERVICE_TOKEN }}
+          PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+          PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
         run: |
           # Create a password for staging deployment
-          PASSWORD_JSON=$(pscale password create "$PSCALE_DB" "$PSCALE_BRANCH" "staging-deploy-${{ github.run_id }}" \
-            --org "$PSCALE_ORG" --format json --role admin)
+          PASSWORD_JSON=$(pscale password create "$PLANETSCALE_DB" "$PLANETSCALE_BRANCH" "staging-deploy-${{ github.run_id }}" \
+            --org "$PLANETSCALE_ORG" --format json --role admin)
           
           HOST=$(echo "$PASSWORD_JSON" | jq -r '.hostname')
           USERNAME=$(echo "$PASSWORD_JSON" | jq -r '.username')
           PASSWORD=$(echo "$PASSWORD_JSON" | jq -r '.plain_text')
           
-          DATABASE_URL="postgresql://${USERNAME}:${PASSWORD}@${HOST}/${PSCALE_DB}?sslmode=require"
+          DATABASE_URL="postgresql://${USERNAME}:${PASSWORD}@${HOST}/${PLANETSCALE_DB}?sslmode=require"
           
           echo "::add-mask::$PASSWORD"
           echo "::add-mask::$DATABASE_URL"
