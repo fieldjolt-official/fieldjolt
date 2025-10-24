@@ -41,7 +41,7 @@ jobs:
         run: |
           # Create a password for staging deployment
           PASSWORD_JSON=$(pscale password create "$PLANETSCALE_DB" "$PLANETSCALE_BRANCH" "staging-deploy-${{ github.run_id }}" \
-            --org "$PLANETSCALE_ORG" --format json --role admin)
+            --org "$PLANETSCALE_ORG" --format json)
           
           HOST=$(echo "$PASSWORD_JSON" | jq -r '.hostname')
           USERNAME=$(echo "$PASSWORD_JSON" | jq -r '.username')
