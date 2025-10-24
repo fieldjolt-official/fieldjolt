@@ -1,0 +1,121 @@
+name: Production Deployment
+
+on:
+  push:
+    branches: [main]
+
+env:
+  PSCALE_ORG: ${{ secrets.PSCALE_ORG_NAME }}
+  PSCALE_DB: ${{ secrets.PSCALE_DATABASE_NAME }}
+  PSCALE_BRANCH: main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production  # Requires manual approval
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Setup PlanetScale CLI
+        uses: planetscale/setup-pscale-action@v1
+
+      # Create deploy request from staging to main
+      - name: Create deploy request
+        id: deploy-request
+        env:
+          PSCALE_SERVICE_TOKEN_ID: ${{ secrets.PSCALE_SERVICE_TOKEN_ID }}
+          PSCALE_SERVICE_TOKEN: ${{ secrets.PSCALE_SERVICE_TOKEN }}
+        run: |
+          # Create deploy request
+          DR_NUMBER=$(pscale deploy-request create "$PSCALE_DB" "$PSCALE_BRANCH" \
+            --org "$PSCALE_ORG" --format json | jq -r '.number')
+          
+          echo "number=$DR_NUMBER" >> $GITHUB_OUTPUT
+          echo "📝 Deploy request #$DR_NUMBER created"
+          
+          # Get schema diff
+          echo "## Schema Changes" > dr-diff.txt
+          echo '```diff' >> dr-diff.txt
+          pscale deploy-request diff "$PSCALE_DB" "$DR_NUMBER" \
+            --org "$PSCALE_ORG" --format json | jq -r '.[].raw' >> dr-diff.txt || echo "No changes" >> dr-diff.txt
+          echo '```' >> dr-diff.txt
+          
+          cat dr-diff.txt
+
+      # Wait for manual approval or auto-approve if no breaking changes
+      - name: Deploy schema changes
+        env:
+          PSCALE_SERVICE_TOKEN_ID: ${{ secrets.PSCALE_SERVICE_TOKEN_ID }}
+          PSCALE_SERVICE_TOKEN: ${{ secrets.PSCALE_SERVICE_TOKEN }}
+        run: |
+          DR_NUMBER="${{ steps.deploy-request.outputs.number }}"
+          
+          # Deploy the request (this applies the schema changes)
+          pscale deploy-request deploy "$PSCALE_DB" "$DR_NUMBER" --org "$PSCALE_ORG"
+          
+          echo "✅ Schema changes deployed to production"
+
+      # Get production credentials
+      - name: Get production database password
+        id: db-password
+        env:
+          PSCALE_SERVICE_TOKEN_ID: ${{ secrets.PSCALE_SERVICE_TOKEN_ID }}
+          PSCALE_SERVICE_TOKEN: ${{ secrets.PSCALE_SERVICE_TOKEN }}
+        run: |
+          PASSWORD_JSON=$(pscale password create "$PSCALE_DB" "$PSCALE_BRANCH" "prod-deploy-${{ github.run_id }}" \
+            --org "$PSCALE_ORG" --format json --role admin)
+          
+          HOST=$(echo "$PASSWORD_JSON" | jq -r '.hostname')
+          USERNAME=$(echo "$PASSWORD_JSON" | jq -r '.username')
+          PASSWORD=$(echo "$PASSWORD_JSON" | jq -r '.plain_text')
+          
+          DATABASE_URL="postgresql://${USERNAME}:${PASSWORD}@${HOST}/${PSCALE_DB}?sslmode=require"
+          
+          echo "::add-mask::$PASSWORD"
+          echo "::add-mask::$DATABASE_URL"
+          echo "database_url=$DATABASE_URL" >> $GITHUB_OUTPUT
+
+      # Run production tests
+      - name: Run tests
+        env:
+          DATABASE_URL: ${{ steps.db-password.outputs.database_url }}
+        run: pnpm test
+
+      # # Deploy to Vercel (production)
+      # - name: Deploy to Vercel
+      #   env:
+      #     VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      #     DATABASE_URL: ${{ steps.db-password.outputs.database_url }}
+      #   run: |
+      #     npm install -g vercel@latest
+      #     vercel deploy --prod \
+      #       --token=$VERCEL_TOKEN \
+      #       --build-env DATABASE_URL="$DATABASE_URL" \
+      #       --env DATABASE_URL="$DATABASE_URL" \
+      #       --yes
+
+      # # Deploy to Cloudflare (production)
+      # - name: Deploy API to Cloudflare
+      #   env:
+      #     CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      #     DATABASE_URL: ${{ steps.db-password.outputs.database_url }}
+      #   run: |
+      #     cd apps/api
+      #     npx wrangler deploy --env production \
+      #       --var DATABASE_URL:"$DATABASE_URL"

@@ -21,7 +21,7 @@ async function createBranch() {
     const proceed = await prompt("Continue anyway? (y/N): ");
     if (proceed.toLowerCase() !== "y") {
       console.log("💡 Run: git checkout staging");
-      process.exit(1);
+      process.exit(0);
     }
   }
 
