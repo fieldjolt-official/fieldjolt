@@ -3,6 +3,8 @@ dist/
 /build
 /out/
 
+worker-configuration.d.ts
+
 # dev
 .yarn/
 !.yarn/patches

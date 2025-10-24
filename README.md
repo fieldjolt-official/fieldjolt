@@ -1,4 +1,4 @@
-# fieldjolt-new
+# fieldjolt
 
 This project was created with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack), a modern TypeScript stack that combines Next.js, Hono, and more.
 
@@ -76,7 +76,7 @@ BETTER_AUTH_URL={your-production-server-domain}
 ## Project Structure
 
 ```
-fieldjolt-new/
+fieldjolt/
 ├── apps/
 │   ├── web/         # Frontend application (Next.js)
 │   ├── native/      # Mobile application (React Native, Expo)

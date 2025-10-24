@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "dist",
+    "jsx": "react-jsx",
+    "paths": {
+      "@fieldjolt/ui/*": ["./src/*"]
+    },
+    "composite": true
+  },
+  "include": ["."],
+  "exclude": ["node_modules", "dist"]
+}

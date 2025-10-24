@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": true,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "src/styles/index.css",
+    "baseColor": "neutral",
+    "cssVariables": true
+  },
+  "iconLibrary": "lucide",
+  "aliases": {
+    "components": "@fieldjolt/ui/components",
+    "utils": "@fieldjolt/ui/lib/utils",
+    "hooks": "@fieldjolt/ui/hooks",
+    "lib": "@fieldjolt/ui/lib",
+    "ui": "@fieldjolt/ui/components"
+  }
+}
