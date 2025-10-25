@@ -32,97 +32,35 @@ jobs:
       - name: Setup PlanetScale CLI
         uses: planetscale/setup-pscale-action@v1
 
-      - name: Debug role creation
-        env:
-          PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
-          PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
-        run: |
-          echo "Creating role..."
-          ROLE_JSON=$(pscale role create "$PLANETSCALE_DB" "$PLANETSCALE_BRANCH" "test-role-${{ github.run_id }}" \
-            --org "$PLANETSCALE_ORG" --format json)
-          
-          echo "Raw response:"
-          echo "$ROLE_JSON" | jq '.'
-          
-          # Delete the test role
-          ROLE_ID=$(echo "$ROLE_JSON" | jq -r '.id')
-          pscale role delete "$PLANETSCALE_DB" "$PLANETSCALE_BRANCH" "$ROLE_ID" --org "$PLANETSCALE_ORG" --force
-
-      - name: Get staging database credentials
+      # Get staging database credentials
+      - name: Get staging database password
         id: db-password
         env:
           PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
           PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
         run: |
-          echo "Creating database role..."
-          ROLE_JSON=$(pscale role create "$PLANETSCALE_DB" "$PLANETSCALE_BRANCH" "staging-deploy-${{ github.run_id }}" \
-            --org "$PLANETSCALE_ORG" --format json)
+          # Create a password for staging deployment
+          PASSWORD_JSON=$(pscale password create "$PLANETSCALE_DB" "$PLANETSCALE_BRANCH" "staging-deploy-${{ github.run_id }}" \
+            --org "$PLANETSCALE_ORG" --format json --role admin)
           
-          echo "Raw response:"
-          echo "$ROLE_JSON" | jq '.'
+          HOST=$(echo "$PASSWORD_JSON" | jq -r '.hostname')
+          USERNAME=$(echo "$PASSWORD_JSON" | jq -r '.username')
+          PASSWORD=$(echo "$PASSWORD_JSON" | jq -r '.plain_text')
           
-          # Parse credentials from response
-          ROLE_ID=$(echo "$ROLE_JSON" | jq -r '.id')
-          HOST=$(echo "$ROLE_JSON" | jq -r '.hostname')
-          USERNAME=$(echo "$ROLE_JSON" | jq -r '.username')
-          PASSWORD=$(echo "$ROLE_JSON" | jq -r '.password')
-          
-          echo "Parsed values:"
-          echo "Role ID: $ROLE_ID"
-          echo "Host: $HOST"
-          echo "Username: $USERNAME"
-          echo "Password length: ${#PASSWORD}"
-          
-          # Validate credentials
-          if [ -z "$HOST" ] || [ "$HOST" = "null" ] || [ -z "$USERNAME" ] || [ "$USERNAME" = "null" ] || [ -z "$PASSWORD" ] || [ "$PASSWORD" = "null" ]; then
-            echo "❌ Error: Failed to parse credentials"
-            echo "Full response: $ROLE_JSON"
-            exit 1
-          fi
-          
-          # Build connection string
           DATABASE_URL="postgresql://${USERNAME}:${PASSWORD}@${HOST}/${PLANETSCALE_DB}?sslmode=require"
           
-          # Mask sensitive data
           echo "::add-mask::$PASSWORD"
           echo "::add-mask::$DATABASE_URL"
-          
-          # Output for next steps
           echo "database_url=$DATABASE_URL" >> $GITHUB_OUTPUT
-          echo "role_id=$ROLE_ID" >> $GITHUB_OUTPUT
-          
-          echo "✅ Database credentials created successfully"
 
-      # Push schema changes (without --accept-data-loss for staging)
+      # Push schema changes
       - name: Push Prisma schema
         env:
           DATABASE_URL: ${{ steps.db-password.outputs.database_url }}
         run: |
           cd packages/db
           pnpm prisma generate
-          
-          # Try without --accept-data-loss first
-          if ! pnpm prisma db push --skip-generate 2>&1 | tee push-output.txt; then
-            echo "⚠️ Schema push failed"
-            cat push-output.txt
-            
-            # Check if it's a data loss issue
-            if grep -qi "data loss\|would result in data loss\|destructive" push-output.txt; then
-              echo ""
-              echo "❌ BLOCKING: Schema changes would cause data loss in staging."
-              echo "Please review the changes carefully."
-              echo ""
-              echo "If you're sure this is safe, you can:"
-              echo "1. Manually run: pnpm prisma db push --accept-data-loss"
-              echo "2. Or add --accept-data-loss to the workflow for this deploy"
-              exit 1
-            else
-              echo "❌ Schema push failed for unknown reason"
-              exit 1
-            fi
-          fi
-          
-          echo "✅ Schema pushed successfully with no data loss"
+          pnpm prisma db push --skip-generate --accept-data-loss
 
       # Run tests
       - name: Run tests

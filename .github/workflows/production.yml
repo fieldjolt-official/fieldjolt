@@ -5,8 +5,8 @@ on:
     branches: [main]
 
 env:
-  PLANETSCALE_ORG: ${{ secrets.PLANETSCALE_ORG_NAME }}
-  PLANETSCALE_DB: ${{ secrets.PLANETSCALE_DATABASE_NAME }}
+  PLANETSCALE_ORG: ${{ secrets.PLANETSCALE_ORG }}
+  PLANETSCALE_DB: ${{ secrets.PLANETSCALE_DB }}
   PLANETSCALE_BRANCH: main
 
 jobs:

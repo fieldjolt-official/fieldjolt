@@ -6,8 +6,8 @@ on:
     types: [opened, synchronize, reopened]
 
 env:
-  PLANETSCALE_ORG: ${{ secrets.PLANETSCALE_ORG_NAME }}
-  PLANETSCALE_DB: ${{ secrets.PLANETSCALE_DATABASE_NAME }}
+  PLANETSCALE_ORG: ${{ secrets.PLANETSCALE_ORG }}
+  PLANETSCALE_DB: ${{ secrets.PLANETSCALE_DB }}
 
 jobs:
   preview:
