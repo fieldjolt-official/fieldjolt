@@ -48,7 +48,7 @@ jobs:
           echo "$ROLES_JSON" | jq '.'
           
           # Get the default postgres role (has full permissions)
-          DEFAULT_ROLE=$(echo "$ROLES_JSON" | jq -r '.[] | select(.name == "postgres" or .is_default == true) | .id' | head -n 1)
+          DEFAULT_ROLE=$(echo "$ROLES_JSON" | jq -r '.[] | select(.name == "default") | .id' | head -n 1)
           
           if [ -n "$DEFAULT_ROLE" ]; then
             echo "Using default role: $DEFAULT_ROLE"
