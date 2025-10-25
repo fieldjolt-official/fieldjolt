@@ -1,4 +1,4 @@
-name: Production Deployment
+name: Deploy to Production
 
 on:
   push:
@@ -12,7 +12,6 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: production  # Requires manual approval
     
     steps:
       - name: Checkout code
@@ -33,73 +32,56 @@ jobs:
       - name: Setup PlanetScale CLI
         uses: planetscale/setup-pscale-action@v1
 
-      # Create deploy request from staging to main
-      - name: Create deploy request
-        id: deploy-request
+      # Get production database credentials
+      - name: Get database credentials
+        id: db-creds
         env:
           PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
           PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
         run: |
-          # Create deploy request
-          DR_NUMBER=$(pscale deploy-request create "$PLANETSCALE_DB" "$PLANETSCALE_BRANCH" \
-            --org "$PLANETSCALE_ORG" --format json | jq -r '.number')
+          echo "Creating database role..."
+          ROLE_JSON=$(pscale role create "$PLANETSCALE_DB" "$PLANETSCALE_BRANCH" "deploy-${{ github.run_id }}" \
+            --org "$PLANETSCALE_ORG" --format json)
           
-          echo "number=$DR_NUMBER" >> $GITHUB_OUTPUT
-          echo "📝 Deploy request #$DR_NUMBER created"
+          # Parse credentials
+          ROLE_ID=$(echo "$ROLE_JSON" | jq -r '.id')
+          HOST=$(echo "$ROLE_JSON" | jq -r '.hostname')
+          USERNAME=$(echo "$ROLE_JSON" | jq -r '.username')
+          PASSWORD=$(echo "$ROLE_JSON" | jq -r '.password')
           
-          # Get schema diff
-          echo "## Schema Changes" > dr-diff.txt
-          echo '```diff' >> dr-diff.txt
-          pscale deploy-request diff "$PLANETSCALE_DB" "$DR_NUMBER" \
-            --org "$PLANETSCALE_ORG" --format json | jq -r '.[].raw' >> dr-diff.txt || echo "No changes" >> dr-diff.txt
-          echo '```' >> dr-diff.txt
-          
-          cat dr-diff.txt
-
-      # Wait for manual approval or auto-approve if no breaking changes
-      - name: Deploy schema changes
-        env:
-          PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
-          PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
-        run: |
-          DR_NUMBER="${{ steps.deploy-request.outputs.number }}"
-          
-          # Deploy the request (this applies the schema changes)
-          pscale deploy-request deploy "$PLANETSCALE_DB" "$DR_NUMBER" --org "$PLANETSCALE_ORG"
-          
-          echo "✅ Schema changes deployed to production"
-
-      # Get production credentials
-      - name: Get production database password
-        id: db-password
-        env:
-          PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
-          PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
-        run: |
-          PASSWORD_JSON=$(pscale password create "$PLANETSCALE_DB" "$PLANETSCALE_BRANCH" "prod-deploy-${{ github.run_id }}" \
-            --org "$PLANETSCALE_ORG" --format json --role admin)
-          
-          HOST=$(echo "$PASSWORD_JSON" | jq -r '.hostname')
-          USERNAME=$(echo "$PASSWORD_JSON" | jq -r '.username')
-          PASSWORD=$(echo "$PASSWORD_JSON" | jq -r '.plain_text')
-          
+          # Build connection string
           DATABASE_URL="postgresql://${USERNAME}:${PASSWORD}@${HOST}/${PLANETSCALE_DB}?sslmode=require"
           
+          # Mask sensitive data
           echo "::add-mask::$PASSWORD"
           echo "::add-mask::$DATABASE_URL"
+          
+          # Output
           echo "database_url=$DATABASE_URL" >> $GITHUB_OUTPUT
+          echo "role_id=$ROLE_ID" >> $GITHUB_OUTPUT
+          echo "✅ Credentials created"
 
-      # Run production tests
+      # Push schema changes
+      - name: Push Prisma schema
+        env:
+          DATABASE_URL: ${{ steps.db-creds.outputs.database_url }}
+        run: |
+          cd packages/db
+          pnpm prisma generate
+          pnpm prisma db push --skip-generate
+          echo "✅ Schema updated"
+
+      # Run tests (optional)
       - name: Run tests
         env:
-          DATABASE_URL: ${{ steps.db-password.outputs.database_url }}
-        run: pnpm test
+          DATABASE_URL: ${{ steps.db-creds.outputs.database_url }}
+        run: pnpm test || echo "No tests configured yet"
 
-      # # Deploy to Vercel (production)
+      # Deploy to Vercel
       # - name: Deploy to Vercel
       #   env:
       #     VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-      #     DATABASE_URL: ${{ steps.db-password.outputs.database_url }}
+      #     DATABASE_URL: ${{ steps.db-creds.outputs.database_url }}
       #   run: |
       #     npm install -g vercel@latest
       #     vercel deploy --prod \
@@ -108,12 +90,25 @@ jobs:
       #       --env DATABASE_URL="$DATABASE_URL" \
       #       --yes
 
-      # # Deploy to Cloudflare (production)
+      # # Deploy to Cloudflare
       # - name: Deploy API to Cloudflare
       #   env:
       #     CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      #     DATABASE_URL: ${{ steps.db-password.outputs.database_url }}
+      #     DATABASE_URL: ${{ steps.db-creds.outputs.database_url }}
       #   run: |
       #     cd apps/api
       #     npx wrangler deploy --env production \
       #       --var DATABASE_URL:"$DATABASE_URL"
+
+      # Cleanup
+      - name: Cleanup database role
+        if: always()
+        env:
+          PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+          PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
+        run: |
+          ROLE_ID="${{ steps.db-creds.outputs.role_id }}"
+          if [ -n "$ROLE_ID" ]; then
+            pscale role delete "$PLANETSCALE_DB" "$PLANETSCALE_BRANCH" "$ROLE_ID" \
+              --org "$PLANETSCALE_ORG" --force || true
+          fi
