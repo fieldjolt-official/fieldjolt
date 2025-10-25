@@ -16,7 +16,7 @@
     "@fieldjolt/db": "workspace:*",
     "better-auth": "catalog:",
     "dotenv": "catalog:",
-    "hono": "^4.10.2",
+    "hono": "^4.10.3",
     "zod": "catalog:"
   },
   "devDependencies": {
