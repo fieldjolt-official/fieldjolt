@@ -32,41 +32,120 @@ jobs:
       - name: Setup PlanetScale CLI
         uses: planetscale/setup-pscale-action@v1
 
+      - name: Debug role creation
+        env:
+          PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+          PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
+        run: |
+          echo "Creating role..."
+          ROLE_JSON=$(pscale role create "$PLANETSCALE_DB" "$PLANETSCALE_BRANCH" "test-role-${{ github.run_id }}" \
+            --org "$PLANETSCALE_ORG" --format json --role admin)
+          
+          echo "Raw response:"
+          echo "$ROLE_JSON" | jq '.'
+          
+          # Delete the test role
+          ROLE_ID=$(echo "$ROLE_JSON" | jq -r '.id')
+          pscale role delete "$PLANETSCALE_DB" "$PLANETSCALE_BRANCH" "$ROLE_ID" --org "$PLANETSCALE_ORG" --force
+
       # Get staging database credentials
-      - name: Get staging database password
+      - name: Get staging database credentials
         id: db-password
         env:
           PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
           PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
         run: |
-          # Create a password for staging deployment
-          PASSWORD_JSON=$(pscale password create "$PLANETSCALE_DB" "$PLANETSCALE_BRANCH" "staging-deploy-${{ github.run_id }}" \
-            --org "$PLANETSCALE_ORG" --format json)
+          # For Postgres, use 'role create' instead of 'password create'
+          ROLE_NAME="staging-deploy-${{ github.run_id }}"
           
-          HOST=$(echo "$PASSWORD_JSON" | jq -r '.hostname')
-          USERNAME=$(echo "$PASSWORD_JSON" | jq -r '.username')
-          PASSWORD=$(echo "$PASSWORD_JSON" | jq -r '.plain_text')
+          echo "Creating role: $ROLE_NAME"
+          ROLE_JSON=$(pscale role create "$PLANETSCALE_DB" "$PLANETSCALE_BRANCH" "$ROLE_NAME" \
+            --org "$PLANETSCALE_ORG" --format json --role admin)
           
+          echo "Role created, parsing credentials..."
+          
+          # Parse the JSON response
+          # PlanetScale Postgres roles return credentials in the response
+          HOST=$(echo "$ROLE_JSON" | jq -r '.hostname // .host')
+          USERNAME=$(echo "$ROLE_JSON" | jq -r '.username // .name')
+          PASSWORD=$(echo "$ROLE_JSON" | jq -r '.password // .plain_text')
+          
+          # Debug: Show what we got (without sensitive data)
+          echo "Host: $HOST"
+          echo "Username: $USERNAME"
+          echo "Password length: ${#PASSWORD}"
+          
+          # Validate we got the credentials
+          if [ -z "$HOST" ] || [ -z "$USERNAME" ] || [ -z "$PASSWORD" ]; then
+            echo "Error: Failed to parse credentials from role creation"
+            echo "Response was: $ROLE_JSON"
+            exit 1
+          fi
+          
+          # Build PostgreSQL connection string
           DATABASE_URL="postgresql://${USERNAME}:${PASSWORD}@${HOST}/${PLANETSCALE_DB}?sslmode=require"
           
+          # Mask sensitive data in logs
           echo "::add-mask::$PASSWORD"
           echo "::add-mask::$DATABASE_URL"
+          
+          # Output for next steps
           echo "database_url=$DATABASE_URL" >> $GITHUB_OUTPUT
+          echo "role_id=$(echo "$ROLE_JSON" | jq -r '.id')" >> $GITHUB_OUTPUT
+          echo "✅ Database credentials created"
 
-      # Push schema changes
+      # Push schema changes (without --accept-data-loss for staging)
       - name: Push Prisma schema
         env:
           DATABASE_URL: ${{ steps.db-password.outputs.database_url }}
         run: |
           cd packages/db
           pnpm prisma generate
-          pnpm prisma db push --skip-generate --accept-data-loss
+          
+          # Try without --accept-data-loss first
+          if ! pnpm prisma db push --skip-generate 2>&1 | tee push-output.txt; then
+            echo "⚠️ Schema push failed"
+            cat push-output.txt
+            
+            # Check if it's a data loss issue
+            if grep -qi "data loss\|would result in data loss\|destructive" push-output.txt; then
+              echo ""
+              echo "❌ BLOCKING: Schema changes would cause data loss in staging."
+              echo "Please review the changes carefully."
+              echo ""
+              echo "If you're sure this is safe, you can:"
+              echo "1. Manually run: pnpm prisma db push --accept-data-loss"
+              echo "2. Or add --accept-data-loss to the workflow for this deploy"
+              exit 1
+            else
+              echo "❌ Schema push failed for unknown reason"
+              exit 1
+            fi
+          fi
+          
+          echo "✅ Schema pushed successfully with no data loss"
 
       # Run tests
       - name: Run tests
         env:
           DATABASE_URL: ${{ steps.db-password.outputs.database_url }}
         run: pnpm test
+
+      # Clean up the temporary role after deployment
+      - name: Cleanup database role
+        if: always()
+        env:
+          PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+          PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
+        run: |
+          ROLE_ID="${{ steps.db-password.outputs.role_id }}"
+          
+          if [ -n "$ROLE_ID" ]; then
+            echo "Cleaning up role: $ROLE_ID"
+            pscale role delete "$PLANETSCALE_DB" "$PLANETSCALE_BRANCH" "$ROLE_ID" \
+              --org "$PLANETSCALE_ORG" --force || true
+            echo "✅ Role cleaned up"
+          fi
 
       # # Deploy to Vercel (staging)
       # - name: Deploy to Vercel
