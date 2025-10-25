@@ -32,6 +32,36 @@ jobs:
       - name: Setup PlanetScale CLI
         uses: planetscale/setup-pscale-action@v1
 
+      - name: Debug role creation
+        env:
+          PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+          PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
+        run: |
+          echo "Creating role..."
+          ROLE_JSON=$(pscale role create "$PLANETSCALE_DB" "$PLANETSCALE_BRANCH" "debug-${{ github.run_id }}" \
+            --org "$PLANETSCALE_ORG" --format json)
+          
+          echo "=== RAW JSON RESPONSE ==="
+          echo "$ROLE_JSON" | jq '.'
+          
+          echo ""
+          echo "=== ALL KEYS IN RESPONSE ==="
+          echo "$ROLE_JSON" | jq 'keys'
+          
+          echo ""
+          echo "=== TRYING DIFFERENT FIELD NAMES ==="
+          echo "ID: $(echo "$ROLE_JSON" | jq -r '.id // .role_id // .roleId // "not found"')"
+          echo "Host: $(echo "$ROLE_JSON" | jq -r '.hostname // .host // .access_host_url // .endpoint // "not found"')"
+          echo "Username: $(echo "$ROLE_JSON" | jq -r '.username // .user // .name // "not found"')"
+          echo "Password: $(echo "$ROLE_JSON" | jq -r '.password // .plain_text // .secret // "not found" | .[0:10]')..."
+          
+          # Cleanup
+          ROLE_ID=$(echo "$ROLE_JSON" | jq -r '.id')
+          if [ -n "$ROLE_ID" ] && [ "$ROLE_ID" != "null" ]; then
+            pscale role delete "$PLANETSCALE_DB" "$PLANETSCALE_BRANCH" "$ROLE_ID" \
+              --org "$PLANETSCALE_ORG" --force || true
+          fi
+
       # Get production database credentials
       - name: Get database credentials
         id: db-creds
