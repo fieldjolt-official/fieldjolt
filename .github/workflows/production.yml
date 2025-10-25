@@ -39,26 +39,40 @@ jobs:
           PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
           PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
         run: |
-          echo "Creating database role..."
-          ROLE_JSON=$(pscale role create "$PLANETSCALE_DB" "$PLANETSCALE_BRANCH" "deploy-${{ github.run_id }}" \
+          echo "Creating database password..."
+          
+          # Use password create instead of role create
+          PASSWORD_JSON=$(pscale password create "$PLANETSCALE_DB" "$PLANETSCALE_BRANCH" "deploy-${{ github.run_id }}" \
             --org "$PLANETSCALE_ORG" --format json)
           
-          # Parse credentials
-          ROLE_ID=$(echo "$ROLE_JSON" | jq -r '.id')
-          HOST=$(echo "$ROLE_JSON" | jq -r '.hostname')
-          USERNAME=$(echo "$ROLE_JSON" | jq -r '.username')
-          PASSWORD=$(echo "$ROLE_JSON" | jq -r '.password')
+          echo "Response received, parsing..."
           
-          # Build connection string
+          # Parse connection details
+          HOST=$(echo "$PASSWORD_JSON" | jq -r '.access_host_url')
+          USERNAME=$(echo "$PASSWORD_JSON" | jq -r '.username')
+          PASSWORD=$(echo "$PASSWORD_JSON" | jq -r '.plain_text')
+          
+          echo "Host: $HOST"
+          echo "Username: $USERNAME"
+          
+          # Validate we got everything
+          if [ -z "$HOST" ] || [ "$HOST" = "null" ] || [ -z "$USERNAME" ] || [ "$PASSWORD" = "null" ]; then
+            echo "❌ Failed to parse credentials"
+            echo "Full response:"
+            echo "$PASSWORD_JSON" | jq '.'
+            exit 1
+          fi
+          
+          # Build PostgreSQL connection string
           DATABASE_URL="postgresql://${USERNAME}:${PASSWORD}@${HOST}/${PLANETSCALE_DB}?sslmode=require"
           
           # Mask sensitive data
           echo "::add-mask::$PASSWORD"
           echo "::add-mask::$DATABASE_URL"
           
-          # Output
+          # Output for next steps
           echo "database_url=$DATABASE_URL" >> $GITHUB_OUTPUT
-          echo "role_id=$ROLE_ID" >> $GITHUB_OUTPUT
+          echo "password_id=$(echo "$PASSWORD_JSON" | jq -r '.id')" >> $GITHUB_OUTPUT
           echo "✅ Credentials created"
 
       # Push schema changes
@@ -101,14 +115,15 @@ jobs:
       #       --var DATABASE_URL:"$DATABASE_URL"
 
       # Cleanup
-      - name: Cleanup database role
+      - name: Cleanup database password
         if: always()
         env:
           PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
           PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
         run: |
-          ROLE_ID="${{ steps.db-creds.outputs.role_id }}"
-          if [ -n "$ROLE_ID" ]; then
-            pscale role delete "$PLANETSCALE_DB" "$PLANETSCALE_BRANCH" "$ROLE_ID" \
+          PASSWORD_ID="${{ steps.db-creds.outputs.password_id }}"
+          if [ -n "$PASSWORD_ID" ]; then
+            pscale password delete "$PLANETSCALE_DB" "$PLANETSCALE_BRANCH" "$PASSWORD_ID" \
               --org "$PLANETSCALE_ORG" --force || true
+            echo "✅ Password deleted"
           fi
