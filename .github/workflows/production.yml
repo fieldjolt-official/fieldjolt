@@ -32,37 +32,43 @@ jobs:
       - name: Setup PlanetScale CLI
         uses: planetscale/setup-pscale-action@v1
 
-      # Get production database credentials
-      - name: Get database credentials
+      - name: Get default postgres role credentials
         id: db-creds
         env:
           PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
           PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
         run: |
-          echo "Creating database role..."
-          ROLE_JSON=$(pscale role create "$PLANETSCALE_DB" "$PLANETSCALE_BRANCH" "deploy-${{ github.run_id }}" \
+          echo "Getting default postgres role..."
+          
+          # List all roles to find the default one
+          ROLES_JSON=$(pscale role list "$PLANETSCALE_DB" "$PLANETSCALE_BRANCH" \
             --org "$PLANETSCALE_ORG" --format json)
           
-          # Parse credentials
-          ROLE_ID=$(echo "$ROLE_JSON" | jq -r '.id')
-          HOST=$(echo "$ROLE_JSON" | jq -r '.access_host_url')
-          USERNAME=$(echo "$ROLE_JSON" | jq -r '.username')
-          PASSWORD=$(echo "$ROLE_JSON" | jq -r '.password')
+          echo "Available roles:"
+          echo "$ROLES_JSON" | jq '.'
           
-          echo "✅ Role created: $ROLE_ID"
+          # Get the default postgres role (has full permissions)
+          DEFAULT_ROLE=$(echo "$ROLES_JSON" | jq -r '.[] | select(.name == "postgres" or .is_default == true) | .id' | head -n 1)
           
-          # Build connection string
-          DATABASE_URL="postgresql://${USERNAME}:${PASSWORD}@${HOST}/${PLANETSCALE_DB}?sslmode=require"
-          
-          # Mask sensitive data
-          echo "::add-mask::$PASSWORD"
-          echo "::add-mask::$DATABASE_URL"
-          
-          # Output
-          echo "database_url=$DATABASE_URL" >> $GITHUB_OUTPUT
-          echo "role_id=$ROLE_ID" >> $GITHUB_OUTPUT
+          if [ -n "$DEFAULT_ROLE" ]; then
+            echo "Using default role: $DEFAULT_ROLE"
+            ROLE_JSON=$(pscale role get "$PLANETSCALE_DB" "$PLANETSCALE_BRANCH" "$DEFAULT_ROLE" \
+              --org "$PLANETSCALE_ORG" --format json)
+            
+            # Parse credentials
+            HOST=$(echo "$ROLE_JSON" | jq -r '.access_host_url')
+            USERNAME=$(echo "$ROLE_JSON" | jq -r '.username')
+            PASSWORD=$(echo "$ROLE_JSON" | jq -r '.password')
+            
+            DATABASE_URL="postgresql://${USERNAME}:${PASSWORD}@${HOST}:5432/${PLANETSCALE_DB}?sslmode=require"
+            
+            echo "::add-mask::$PASSWORD"
+            echo "::add-mask::$DATABASE_URL"
+            echo "database_url=$DATABASE_URL" >> $GITHUB_OUTPUT
+          else
+            echo "❌ No default role found"
+          fi
 
-      # Push schema changes
       - name: Push Prisma schema
         env:
           DATABASE_URL: ${{ steps.db-creds.outputs.database_url }}
