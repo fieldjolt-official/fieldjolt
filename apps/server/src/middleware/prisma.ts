@@ -1,12 +1,20 @@
 import { PrismaClient } from "@fieldjolt/db";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { Pool } from "pg";
 import { factory } from "../lib/app";
 
 export const prismaMiddleware = factory.createMiddleware(async (c, next) => {
-  const db = new PrismaClient({
-    datasourceUrl: c.env.HYPERDRIVE.connectionString,
+  const pool = new Pool({
+    connectionString: c.env.HYPERDRIVE.connectionString,
+    maxUses: 1,
   });
 
-  c.set("prisma", db);
+  const adapter = new PrismaPg(pool);
+  const prisma = new PrismaClient({ adapter });
+
+  c.set("prisma", prisma);
 
   await next();
+
+  c.executionCtx.waitUntil(pool.end());
 });
