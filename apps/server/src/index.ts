@@ -21,13 +21,15 @@ app.use(
 
 app.use("*", prismaMiddleware);
 
-app.on(["POST", "GET"], "/auth/*", (c) => {
+app.on(["POST", "GET"], "/auth/*", async (c) => {
   const prisma = c.get("prisma");
+
   const auth = createAuth({
     database: prisma,
     origin: c.env.CORS_ORIGIN,
   });
-  return auth.handler(c.req.raw);
+
+  return await auth.handler(c.req.raw);
 });
 
 app.get("/health", (c) => c.json({ status: "ok" }));

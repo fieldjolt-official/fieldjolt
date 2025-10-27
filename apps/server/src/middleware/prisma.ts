@@ -14,7 +14,10 @@ export const prismaMiddleware = factory.createMiddleware(async (c, next) => {
 
   c.set("prisma", prisma);
 
-  await next();
-
-  c.executionCtx.waitUntil(pool.end());
+  try {
+    await next();
+  } finally {
+    await prisma.$disconnect();
+    await pool.end();
+  }
 });
