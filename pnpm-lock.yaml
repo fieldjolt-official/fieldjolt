@@ -110,7 +110,7 @@ importers:
         specifier: 'catalog:'
         version: 5.9.3
 
-  apps/fumadocs:
+  apps/docs:
     dependencies:
       fumadocs-core:
         specifier: 16.0.1
