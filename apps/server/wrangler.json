@@ -1,0 +1,23 @@
+{
+  "name": "fieldjolt-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-06-15",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    "NODE_ENV": "production"
+  },
+  "observability": {
+    "logs": {
+      "enabled": false,
+      "head_sampling_rate": 1,
+      "invocation_logs": true,
+      "persist": true
+    }
+  },
+  "hyperdrive": [
+    {
+      "binding": "HYPERDRIVE",
+      "id": "249641e8215f45dcac2dab3e1ba65c67"
+    }
+  ]
+}

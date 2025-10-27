@@ -167,6 +167,9 @@ importers:
       '@fieldjolt/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@prisma/adapter-pg':
+        specifier: ^6.18.0
+        version: 6.18.0
       better-auth:
         specifier: 'catalog:'
         version: 1.3.30(next@16.0.0(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -176,6 +179,9 @@ importers:
       hono:
         specifier: ^4.10.3
         version: 4.10.3
+      pg:
+        specifier: ^8.16.3
+        version: 8.16.3
       zod:
         specifier: 'catalog:'
         version: 4.1.12
@@ -183,6 +189,9 @@ importers:
       '@types/node':
         specifier: ^22.18.12
         version: 22.18.12
+      '@types/pg':
+        specifier: ^8.15.5
+        version: 8.15.5
       tsdown:
         specifier: 'catalog:'
         version: 0.15.9(typescript@5.9.3)
@@ -1946,6 +1955,9 @@ packages:
 
   '@types/node@24.9.1':
     resolution: {integrity: sha512-QoiaXANRkSXK6p0Duvt56W208du4P9Uye9hWLWgGMDTEoKPhuenzNcC4vGUmrNkiOKTlIrBoyNQYNpSwfEZXSg==}
+
+  '@types/pg@8.15.5':
+    resolution: {integrity: sha512-LF7lF6zWEKxuT3/OR8wAZGzkg4ENGXFNyiV/JeOt9z5B+0ZVwbql9McqX5c/WStFq1GaGso7H1AzP/qSzmlCKQ==}
 
   '@types/react-dom@19.2.2':
     resolution: {integrity: sha512-9KQPoO6mZCi7jcIStSnlOWn2nEF3mNmyr3rIAsGnAbQKYbRLyqmeSc39EVgtxXVia+LMT8j3knZLAZAh+xLmrw==}
@@ -4792,6 +4804,12 @@ snapshots:
   '@types/node@24.9.1':
     dependencies:
       undici-types: 7.16.0
+
+  '@types/pg@8.15.5':
+    dependencies:
+      '@types/node': 22.18.12
+      pg-protocol: 1.10.3
+      pg-types: 2.2.0
 
   '@types/react-dom@19.2.2(@types/react@19.2.2)':
     dependencies:
