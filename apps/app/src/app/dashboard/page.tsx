@@ -4,15 +4,17 @@ import { authClient } from "@/lib/auth-client";
 import Dashboard from "./dashboard";
 
 export default async function DashboardPage() {
+  const headersList = await headers();
+  console.log(JSON.stringify(Object.fromEntries(headersList), null, 2));
   const session = await authClient.getSession({
     fetchOptions: {
-      headers: await headers(),
+      headers: headersList,
       throw: true,
     },
   });
 
   if (!session?.user) {
-    redirect("/login");
+    redirect("/auth");
   }
 
   return (

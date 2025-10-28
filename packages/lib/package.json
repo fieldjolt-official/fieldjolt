@@ -1,0 +1,13 @@
+{
+  "name": "@fieldjolt/lib",
+  "type": "module",
+  "private": true,
+  "exports": {
+    "./*": "./src/*.ts"
+  },
+  "scripts": {},
+  "dependencies": {
+    "hono": "^4.10.3",
+    "nuqs": "^2.7.2"
+  }
+}

@@ -30,12 +30,15 @@
   "linter": {
     "rules": {
       "style": {
-        "noMagicNumbers": "off"
+        "noMagicNumbers": "off",
+        "noExportedImports": "off",
+        "noNestedTernary": "off"
       },
       "suspicious": {
         "noUnknownAtRules": "off",
         "noExplicitAny": "off",
-        "noConsole": "off"
+        "noConsole": "off",
+        "noArrayIndexKey": "off"
       },
       "correctness": {
         "noInvalidPositionAtImportRule": "off"

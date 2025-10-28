@@ -1,7 +1,7 @@
-import { createAuth } from "@fieldjolt/auth";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { createApp } from "./lib/app";
+import { createAuth } from "./lib/auth";
 import { prismaMiddleware } from "./middleware/prisma";
 
 const app = createApp();
@@ -12,7 +12,7 @@ app.use(
   cors({
     origin: (_origin, c) => c.env.CORS_ORIGIN || "",
     allowHeaders: ["Content-Type", "Authorization"],
-    allowMethods: ["POST", "GET", "PATCH", "PUT", "DELETE", "OPTIONS"],
+    allowMethods: ["POST", "GET", "OPTIONS"],
     exposeHeaders: ["Content-Length"],
     maxAge: 600,
     credentials: true,
@@ -25,8 +25,10 @@ app.on(["POST", "GET"], "/auth/*", async (c) => {
   const prisma = c.get("prisma");
 
   const auth = createAuth({
+    environment: c.env.NODE_ENV,
     database: prisma,
     origin: c.env.CORS_ORIGIN,
+    resendApiKey: c.env.RESEND_API_KEY,
   });
 
   return await auth.handler(c.req.raw);
@@ -40,5 +42,7 @@ app.onError((err, c) => {
   console.error(err);
   return c.json({ error: "Internal server error", message: err.message }, 500);
 });
+
+export type AppType = typeof app;
 
 export default app;
