@@ -31,6 +31,11 @@ export function createAuth(config: CreateAuthConfig) {
       enabled: true,
     },
     advanced: {
+      crossSubDomainCookies: {
+        enabled: true,
+        domain:
+          config.environment === "production" ? "app.fieldjolt.com" : "localhost",
+      },
       defaultCookieAttributes: {
         sameSite: config.environment === "production" ? "none" : "lax",
         secure: config.environment === "production",
