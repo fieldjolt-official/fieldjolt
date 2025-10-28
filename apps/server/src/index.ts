@@ -11,9 +11,9 @@ app.use(
   "*",
   cors({
     origin: (_origin, c) => c.env.CORS_ORIGIN || "",
-    allowHeaders: ["Content-Type", "Authorization"],
-    allowMethods: ["POST", "GET", "OPTIONS"],
-    exposeHeaders: ["Content-Length"],
+    allowHeaders: ["Content-Type", "Authorization", "Cookie"],
+    allowMethods: ["POST", "GET", "PATCH", "PUT", "DELETE", "OPTIONS"],
+    exposeHeaders: ["Content-Length", "Set-Cookie"],
     maxAge: 600,
     credentials: true,
   })
@@ -28,6 +28,7 @@ app.on(["POST", "GET"], "/auth/*", async (c) => {
     environment: c.env.NODE_ENV,
     database: prisma,
     origin: c.env.CORS_ORIGIN,
+    apiURL: c.env.BETTER_AUTH_URL,
     resendApiKey: c.env.RESEND_API_KEY,
   });
 

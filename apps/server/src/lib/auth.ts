@@ -10,6 +10,7 @@ type CreateAuthConfig = {
   environment: "development" | "production";
   database: PrismaClient;
   origin: string;
+  apiURL: string;
   resendApiKey: string;
 };
 
@@ -26,7 +27,7 @@ export function createAuth(config: CreateAuthConfig) {
     database: prismaAdapter(config.database, {
       provider: "postgresql",
     }),
-    trustedOrigins: [config.origin],
+    trustedOrigins: [config.origin, config.apiURL],
     emailAndPassword: {
       enabled: true,
     },
@@ -34,7 +35,7 @@ export function createAuth(config: CreateAuthConfig) {
       ...(config.environment === "production" && {
         crossSubDomainCookies: {
           enabled: true,
-          domain: ".fieldjolt.com",
+          domain: "fieldjolt.com",
         },
       }),
       defaultCookieAttributes: {
