@@ -9,6 +9,9 @@ import type { Auth } from "../../../server/src/lib/auth";
 export const authClient = createAuthClient({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   basePath: "/auth",
+  fetchOptions: {
+    credentials: "include",
+  },
   plugins: [
     inferAdditionalFields<Auth>(),
     magicLinkClient(),
