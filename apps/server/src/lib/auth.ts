@@ -2,7 +2,6 @@
 import type { PrismaClient } from "@fieldjolt/db";
 import { type BetterAuthOptions, betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { nextCookies } from "better-auth/next-js";
 import { lastLoginMethod, magicLink } from "better-auth/plugins";
 import { getResend } from "./resend";
 
@@ -23,6 +22,7 @@ export function createAuth(config: CreateAuthConfig) {
   }
 
   return betterAuth<BetterAuthOptions>({
+    baseURL: config.apiURL,
     basePath: "/auth",
     database: prismaAdapter(config.database, {
       provider: "postgresql",
@@ -33,6 +33,7 @@ export function createAuth(config: CreateAuthConfig) {
     },
     advanced: {
       ...(config.environment === "production" && {
+        useSecureCookies: true,
         crossSubDomainCookies: {
           enabled: true,
           domain: "fieldjolt.com",
@@ -42,10 +43,10 @@ export function createAuth(config: CreateAuthConfig) {
         sameSite: config.environment === "production" ? "none" : "lax",
         secure: config.environment === "production",
         httpOnly: true,
+        path: "/",
       },
     },
     plugins: [
-      nextCookies(),
       lastLoginMethod(),
       magicLink({
         sendMagicLink: async ({ email, url }) => {

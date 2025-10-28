@@ -24,6 +24,14 @@ app.use("*", prismaMiddleware);
 app.on(["POST", "GET"], "/auth/*", async (c) => {
   const prisma = c.get("prisma");
 
+  console.log("=== Auth Request ===");
+  console.log("Method:", c.req.method);
+  console.log("Path:", c.req.path);
+  console.log("Origin:", c.req.header("origin"));
+  console.log("Environment:", c.env.NODE_ENV);
+  console.log("CORS_ORIGIN:", c.env.CORS_ORIGIN);
+  console.log("BETTER_AUTH_URL:", c.env.BETTER_AUTH_URL);
+
   const auth = createAuth({
     environment: c.env.NODE_ENV,
     database: prisma,
@@ -32,7 +40,14 @@ app.on(["POST", "GET"], "/auth/*", async (c) => {
     resendApiKey: c.env.RESEND_API_KEY,
   });
 
-  return await auth.handler(c.req.raw);
+  const response = await auth.handler(c.req.raw);
+
+  // Log response cookies
+  const setCookie = response.headers.get("set-cookie");
+  console.log("Set-Cookie:", setCookie);
+  console.log("===================\n");
+
+  return response;
 });
 
 app.get("/health", (c) => c.json({ status: "ok" }));
