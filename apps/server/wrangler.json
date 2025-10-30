@@ -3,6 +3,15 @@
   "main": "src/index.ts",
   "compatibility_date": "2025-06-15",
   "compatibility_flags": ["nodejs_compat"],
+  "env": {
+    "production": {
+      "vars": {
+        "NODE_ENV": "production",
+        "BETTER_AUTH_URL": "https://auth.fieldjolt.com",
+        "CORS_ORIGIN": "https://api.fieldjolt.com"
+      }
+    }
+  },
   "observability": {
     "logs": {
       "enabled": true,
