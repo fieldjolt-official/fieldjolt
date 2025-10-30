@@ -4,6 +4,7 @@ model User {
   email                        String
   emailVerified                Boolean
   image                        String?
+  lastAccessedOrganizationSlug String?
   createdAt                    DateTime
   updatedAt                    DateTime
   sessions                     Session[]
