@@ -17,6 +17,7 @@
     "@tanstack/react-form": "catalog:",
     "@tanstack/react-query": "catalog:",
     "@vercel/analytics": "catalog:",
+    "@vercel/functions": "^3.1.4",
     "babel-plugin-react-compiler": "catalog:",
     "lucide-react": "catalog:",
     "next": "catalog:",

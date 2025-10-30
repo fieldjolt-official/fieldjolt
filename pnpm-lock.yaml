@@ -222,6 +222,9 @@ importers:
       '@vercel/analytics':
         specifier: 'catalog:'
         version: 1.5.0(next@16.0.0(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)
+      '@vercel/functions':
+        specifier: ^3.1.4
+        version: 3.1.4
       babel-plugin-react-compiler:
         specifier: 'catalog:'
         version: 1.0.0
@@ -2283,6 +2286,19 @@ packages:
         optional: true
       vue-router:
         optional: true
+
+  '@vercel/functions@3.1.4':
+    resolution: {integrity: sha512-1dEfZkb7qxsA+ilo+1uBUCEgr7e90vHcimpDYkUB84DM051wQ5amJDk9x+cnaI29paZb5XukXwGl8yk3Udb/DQ==}
+    engines: {node: '>= 20'}
+    peerDependencies:
+      '@aws-sdk/credential-provider-web-identity': '*'
+    peerDependenciesMeta:
+      '@aws-sdk/credential-provider-web-identity':
+        optional: true
+
+  '@vercel/oidc@3.0.3':
+    resolution: {integrity: sha512-yNEQvPcVrK9sIe637+I0jD6leluPxzwJKx/Haw6F4H77CdDsszUn5V3o96LPziXkSNE2B83+Z3mjqGKBK/R6Gg==}
+    engines: {node: '>= 20'}
 
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -5236,6 +5252,12 @@ snapshots:
     optionalDependencies:
       next: 16.0.0(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       react: 19.2.0
+
+  '@vercel/functions@3.1.4':
+    dependencies:
+      '@vercel/oidc': 3.0.3
+
+  '@vercel/oidc@3.0.3': {}
 
   acorn-jsx@5.3.2(acorn@8.15.0):
     dependencies:
