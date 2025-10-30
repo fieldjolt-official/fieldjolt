@@ -4,6 +4,7 @@
   "globalPassThroughEnv": [
     "NODE_ENV",
     "DATABASE_URL",
+    "BETTER_AUTH_SECRET",
     "CORS_ORIGIN",
     "NEXT_PUBLIC_SERVER_URL",
     "NEXT_PUBLIC_APP_URL",

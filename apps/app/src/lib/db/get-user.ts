@@ -7,7 +7,5 @@ export const getUser = cache(async () => {
     headers: await headers(),
   });
 
-  console.log("session", session);
-
   return session?.user;
 });
