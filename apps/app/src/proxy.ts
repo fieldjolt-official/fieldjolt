@@ -10,9 +10,9 @@ export function proxy(request: NextRequest) {
   }
 
   // if user is at /auth and has a session cookie, redirect to /
-  if (sessionCookie && request.nextUrl.pathname.startsWith("/auth")) {
-    return NextResponse.redirect(new URL("/", request.url));
-  }
+  // if (sessionCookie && request.nextUrl.pathname.startsWith("/auth")) {
+  //   return NextResponse.redirect(new URL("/", request.url));
+  // }
 
   return NextResponse.next();
 }
