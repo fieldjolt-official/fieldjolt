@@ -1,7 +1,7 @@
 import { PrismaPg } from "@prisma/adapter-pg";
 import { hashPassword } from "better-auth/crypto";
 import { Pool } from "pg";
-import { PrismaClient } from ".";
+import { PrismaClient } from "./vercel";
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,

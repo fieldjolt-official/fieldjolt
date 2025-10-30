@@ -1,4 +1,4 @@
-import type { PrismaClient } from "@fieldjolt/db";
+import type { PrismaClient } from "@fieldjolt/db/cloudflare";
 import { initTRPC, TRPCError } from "@trpc/server";
 import type { User } from "better-auth";
 import superjson from "superjson";

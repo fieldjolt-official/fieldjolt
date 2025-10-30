@@ -1,4 +1,4 @@
-import type { PrismaClient } from "@fieldjolt/db";
+import type { PrismaClient } from "@fieldjolt/db/cloudflare";
 import { getResend } from "@fieldjolt/lib/resend";
 import { type BetterAuthOptions, betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
