@@ -1,4 +1,4 @@
-import { PrismaClient } from "@fieldjolt/db";
+import { PrismaClient } from "@fieldjolt/db/vercel";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { attachDatabasePool } from "@vercel/functions";
 import { Pool } from "pg";

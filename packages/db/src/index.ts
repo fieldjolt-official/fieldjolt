@@ -5,4 +5,3 @@ export type {
   OrganizationTeam,
   User,
 } from "@prisma/client";
-export { PrismaClient } from "@prisma/client";
