@@ -1,4 +1,4 @@
-import { PrismaClient } from "@fieldjolt/db";
+import { PrismaClient } from "@fieldjolt/db/cloudflare";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { createFactory } from "hono/factory";
 import { Pool } from "pg";

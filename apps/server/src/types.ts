@@ -1,5 +1,5 @@
 import type { env } from "cloudflare:workers";
-import type { PrismaClient } from "@fieldjolt/db";
+import type { PrismaClient } from "@fieldjolt/db/cloudflare";
 
 export type Variables = {
   prisma: PrismaClient;

@@ -1,1 +1,1 @@
-export { PrismaClient } from "../prisma/generated/vercel/client";
+export { PrismaClient } from ".prisma/client-vercel";
