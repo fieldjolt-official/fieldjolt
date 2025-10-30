@@ -7,21 +7,23 @@
       "types": "./dist/index.d.ts",
       "default": "./src/index.ts"
     },
-    "./*": {
-      "types": "./dist/*.d.ts",
-      "default": "./src/*.ts"
+    "./cloudflare": {
+      "types": "./dist/cloudflare.d.ts",
+      "default": "./src/cloudflare.ts"
+    },
+    "./vercel": {
+      "types": "./dist/vercel.d.ts",
+      "default": "./src/vercel.ts"
     }
   },
   "scripts": {
-    "build": "tsdown",
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev"
   },
   "devDependencies": {
-    "prisma": "catalog:",
-    "tsdown": "catalog:"
+    "prisma": "catalog:"
   },
   "peerDependencies": {
     "typescript": "catalog:"

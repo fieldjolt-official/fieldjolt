@@ -19,12 +19,8 @@
     }
   },
   "type": "module",
-  "scripts": {
-    "build": "tsdown"
-  },
   "devDependencies": {
-    "@types/node": "catalog:",
-    "tsdown": "catalog:"
+    "@types/node": "catalog:"
   },
   "peerDependencies": {
     "typescript": "^5"

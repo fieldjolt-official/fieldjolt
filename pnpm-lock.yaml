@@ -351,9 +351,6 @@ importers:
       '@types/pg':
         specifier: 'catalog:'
         version: 8.15.5
-      tsdown:
-        specifier: 'catalog:'
-        version: 0.15.9(typescript@5.9.3)
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -467,9 +464,6 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 24.9.1
-      tsdown:
-        specifier: 'catalog:'
-        version: 0.15.9(typescript@5.9.3)
 
   packages/auth:
     dependencies:
@@ -491,10 +485,6 @@ importers:
       zod:
         specifier: 'catalog:'
         version: 4.1.12
-    devDependencies:
-      tsdown:
-        specifier: 'catalog:'
-        version: 0.15.9(typescript@5.9.3)
 
   packages/db:
     dependencies:
@@ -517,19 +507,12 @@ importers:
       prisma:
         specifier: 'catalog:'
         version: 6.18.0(typescript@5.9.3)
-      tsdown:
-        specifier: 'catalog:'
-        version: 0.15.9(typescript@5.9.3)
 
   packages/lib:
     dependencies:
       resend:
         specifier: 'catalog:'
         version: 6.3.0
-    devDependencies:
-      tsdown:
-        specifier: 'catalog:'
-        version: 0.15.9(typescript@5.9.3)
 
   packages/ui:
     dependencies:
