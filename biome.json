@@ -44,8 +44,8 @@
         "noInvalidPositionAtImportRule": "off"
       },
       "performance": {
-        "noNamespaceImport": "warn",
-        "noBarrelFile": "warn"
+        "noNamespaceImport": "off",
+        "noBarrelFile": "off"
       },
       "nursery": {}
     }

@@ -15,51 +15,82 @@ import {
 import { toast } from "@fieldjolt/ui/components/sonner";
 import { Spinner } from "@fieldjolt/ui/components/spinner";
 import { useForm } from "@tanstack/react-form";
-import { MailIcon } from "lucide-react";
+import { LockIcon, MailIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import z from "zod";
 import { authClient } from "@/lib/auth-client";
 import { getBaseUrl } from "@/lib/utils";
-import { AuthLayoutWrapper } from "./_components/AuthLayoutWrapper";
+import { LayoutWrapper } from "./_components/layout-wrapper";
 
 export default function AuthPage() {
   const router = useRouter();
   const [transition, startTransition] = useTransition();
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm({
     defaultValues: {
       email: "",
+      password: "",
     },
     onSubmit: ({ value }) => {
       startTransition(async () => {
-        await authClient.signIn.magicLink(
-          {
+        if (showPassword) {
+          const result = await authClient.signIn.email({
             email: value.email,
-            callbackURL: `${getBaseUrl()}/dashboard`,
-            errorCallbackURL: `${getBaseUrl()}/auth`,
-          },
-          {
-            onSuccess: () => {
-              router.push("/auth/magic");
-            },
-            onError: (error) => {
-              toast.error(error.error.message || error.error.statusText);
-            },
+            password: value.password,
+            callbackURL: `${getBaseUrl()}/`,
+          });
+
+          if (result.error) {
+            toast.error(result.error.message || "Invalid email or password");
+          } else {
+            router.push("/");
           }
-        );
+        } else {
+          // Sign in with magic link
+          await authClient.signIn.magicLink(
+            {
+              email: value.email,
+              callbackURL: `${getBaseUrl()}/`,
+              errorCallbackURL: `${getBaseUrl()}/auth`,
+            },
+            {
+              onSuccess: () => {
+                router.push("/auth/magic");
+              },
+              onError: (error) => {
+                toast.error(error.error.message || error.error.statusText);
+              },
+            }
+          );
+        }
       });
     },
     validators: {
-      onSubmit: z.object({
-        email: z.email("Invalid email address"),
-      }),
+      onSubmit: ({ value }) => {
+        const schema = showPassword
+          ? z.object({
+              email: z.string().email("Invalid email address"),
+              password: z
+                .string()
+                .min(8, "Password must be at least 8 characters"),
+            })
+          : z.object({
+              email: z.string().email("Invalid email address"),
+            });
+
+        const result = schema.safeParse(value);
+        if (!result.success) {
+          return result.error.flatten().fieldErrors;
+        }
+      },
     },
   });
 
   return (
-    <AuthLayoutWrapper
+    <LayoutWrapper
       description="Sign in to your FieldJolt account"
       testimonial={{
         quote:
@@ -79,7 +110,7 @@ export default function AuthPage() {
               startTransition(async () => {
                 const result = await authClient.signIn.social({
                   provider: "google",
-                  callbackURL: `${getBaseUrl()}/dashboard`,
+                  callbackURL: `${getBaseUrl()}/`,
                   errorCallbackURL: `${getBaseUrl()}/auth`,
                 });
 
@@ -100,7 +131,7 @@ export default function AuthPage() {
               startTransition(async () => {
                 const result = await authClient.signIn.social({
                   provider: "github",
-                  callbackURL: `${getBaseUrl()}/dashboard`,
+                  callbackURL: `${getBaseUrl()}/`,
                   errorCallbackURL: `${getBaseUrl()}/auth`,
                 });
 
@@ -115,7 +146,9 @@ export default function AuthPage() {
             <GithubIcon className="size-4" /> Continue with Github
           </Button>
         </div>
+
         <FieldSeparator>or</FieldSeparator>
+
         <form
           className="space-y-4"
           onSubmit={(e) => {
@@ -141,32 +174,78 @@ export default function AuthPage() {
                     value={field.state.value}
                   />
                 </InputGroup>
-                {field.state.meta.errors.map((error) => (
-                  <FieldError key={error?.message}>{error?.message}</FieldError>
+                {field.state.meta.errors.map((error, index) => (
+                  <FieldError key={index}>{error}</FieldError>
                 ))}
               </Field>
             )}
           </form.Field>
 
-          <form.Subscribe>
-            {(state) => (
-              <Button
-                className="w-full"
-                disabled={transition || state.isSubmitting || !state.canSubmit}
-                size="lg"
-                type="submit"
-              >
-                {state.isSubmitting ? <Spinner /> : "Continue with Email"}
-              </Button>
-            )}
-          </form.Subscribe>
+          {showPassword && (
+            <form.Field name="password">
+              {(field) => (
+                <Field>
+                  <InputGroup>
+                    <InputGroupAddon>
+                      <LockIcon />
+                    </InputGroupAddon>
+                    <InputGroupInput
+                      id="password"
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      placeholder="Enter your password"
+                      required={showPassword}
+                      type="password"
+                      value={field.state.value}
+                    />
+                  </InputGroup>
+                  {field.state.meta.errors.map((error, index) => (
+                    <FieldError key={index}>{error}</FieldError>
+                  ))}
+                </Field>
+              )}
+            </form.Field>
+          )}
+
+          <div className="space-y-3">
+            <form.Subscribe>
+              {(state) => (
+                <Button
+                  className="w-full"
+                  disabled={
+                    transition || state.isSubmitting || !state.canSubmit
+                  }
+                  size="lg"
+                  type="submit"
+                >
+                  {state.isSubmitting ? (
+                    <Spinner />
+                  ) : showPassword ? (
+                    "Sign in"
+                  ) : (
+                    "Continue with Email"
+                  )}
+                </Button>
+              )}
+            </form.Subscribe>
+
+            <button
+              className="w-full text-center text-muted-foreground text-sm transition-colors hover:text-foreground"
+              onClick={() => setShowPassword(!showPassword)}
+              type="button"
+            >
+              {showPassword
+                ? "Use magic link instead"
+                : "Sign in with password instead"}
+            </button>
+          </div>
         </form>
 
         <p className="text-center text-muted-foreground text-xs">
           By continuing, you agree to our{" "}
           <Link className="underline hover:text-primary" href="/terms">
             Terms
-          </Link>
+          </Link>{" "}
           and{" "}
           <Link className="underline hover:text-primary" href="/privacy">
             Privacy Policy
@@ -174,6 +253,6 @@ export default function AuthPage() {
           .
         </p>
       </div>
-    </AuthLayoutWrapper>
+    </LayoutWrapper>
   );
 }

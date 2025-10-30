@@ -1,7 +1,7 @@
 import { ScrollArea } from "@fieldjolt/ui/components/scroll-area";
 import type { ReactNode } from "react";
 
-type AuthLayoutWrapperProps = {
+type LayoutWrapperProps = {
   children: ReactNode;
   title?: string;
   description?: string;
@@ -14,13 +14,13 @@ type AuthLayoutWrapperProps = {
   showDashboardPreview?: boolean;
 };
 
-export function AuthLayoutWrapper({
+export function LayoutWrapper({
   children,
   title,
   description,
   testimonial,
   showDashboardPreview = false,
-}: AuthLayoutWrapperProps) {
+}: LayoutWrapperProps) {
   return (
     <div className="grid min-h-screen overflow-hidden lg:grid-cols-2">
       {/* Left side - Form content (scrollable) */}

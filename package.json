@@ -23,19 +23,21 @@
     "check-setup": "tsx scripts/check-setup.ts",
     "new-branch": "tsx scripts/new-branch.ts",
     "reset-db": "tsx scripts/reset-db.ts",
-    "seed-db": "tsx scripts/seed.ts"
+    "seed-db": "cd packages/db && prisma db seed",
+
+    "postinstall": "cd packages/db && prisma generate && cd ../.. && cd apps/docs && fumadocs-mdx"
   },
   "dependencies": {
-    "dotenv": "^17.2.3",
-    "zod": "^4.1.12"
+    "dotenv": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.2.6",
-    "@types/node": "^22.18.12",
-    "tsdown": "^0.15.9",
-    "tsx": "^4.20.6",
-    "turbo": "^2.5.8",
-    "ultracite": "5.6.4"
+    "@biomejs/biome": "catalog:",
+    "@types/node": "catalog:",
+    "tsdown": "catalog:",
+    "tsx": "catalog:",
+    "turbo": "catalog:",
+    "ultracite": "catalog:"
   },
   "packageManager": "pnpm@10.19.0"
 }

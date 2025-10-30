@@ -1,0 +1,50 @@
+{
+  "name": "@fieldjolt/api",
+  "exports": {
+    ".": {
+      "types": "./dist/trpc.d.ts",
+      "default": "./src/trpc.ts"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "default": "./src/client.ts"
+    },
+    "./react": {
+      "types": "./dist/react.d.tsx",
+      "default": "./src/react.tsx"
+    },
+    "./root": {
+      "types": "./dist/root.d.ts",
+      "default": "./src/root.ts"
+    }
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsdown"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "tsdown": "catalog:"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@fieldjolt/auth": "workspace:*",
+    "@fieldjolt/db": "workspace:*",
+    "better-auth": "catalog:",
+    "@hono/trpc-server": "^0.4.0",
+    "@tanstack/react-query": "catalog:",
+    "@tanstack/react-query-devtools": "catalog:",
+    "@trpc/client": "catalog:",
+    "@trpc/react-query": "catalog:",
+    "@trpc/server": "catalog:",
+    "@trpc/tanstack-react-query": "catalog:",
+    "client-only": "^0.0.1",
+    "dotenv": "catalog:",
+    "next": "catalog:",
+    "server-only": "^0.0.1",
+    "superjson": "^2.2.5",
+    "zod": "catalog:"
+  }
+}

@@ -13,19 +13,20 @@
   },
   "dependencies": {
     "@fieldjolt/db": "workspace:*",
-    "@prisma/adapter-pg": "^6.18.0",
+    "@fieldjolt/api": "workspace:*",
+    "@fieldjolt/auth": "workspace:*",
+    "@prisma/adapter-pg": "catalog:",
     "better-auth": "catalog:",
     "dotenv": "catalog:",
-    "hono": "^4.10.3",
-    "pg": "^8.16.3",
-    "resend": "^6.3.0",
+    "hono": "catalog:",
+    "pg": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@types/node": "^22.18.12",
-    "@types/pg": "^8.15.5",
+    "@types/node": "catalog:",
+    "@types/pg": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:",
-    "wrangler": "^4.45.0"
+    "wrangler": "catalog:"
   }
 }

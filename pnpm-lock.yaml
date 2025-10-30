@@ -6,21 +6,159 @@ settings:
 
 catalogs:
   default:
+    '@biomejs/biome':
+      specifier: 2.2.6
+      version: 2.2.6
+    '@prisma/adapter-pg':
+      specifier: 6.18.0
+      version: 6.18.0
     '@prisma/client':
       specifier: ^6.18.0
       version: 6.18.0
+    '@radix-ui/react-dropdown-menu':
+      specifier: ^2.1.16
+      version: 2.1.16
+    '@radix-ui/react-label':
+      specifier: ^2.1.7
+      version: 2.1.7
+    '@radix-ui/react-scroll-area':
+      specifier: ^1.2.10
+      version: 1.2.10
+    '@radix-ui/react-separator':
+      specifier: ^1.1.7
+      version: 1.1.7
+    '@radix-ui/react-slot':
+      specifier: ^1.2.3
+      version: 1.2.3
+    '@tailwindcss/postcss':
+      specifier: ^4.1.16
+      version: 4.1.16
+    '@tanstack/react-form':
+      specifier: ^1.23.8
+      version: 1.23.8
+    '@tanstack/react-query':
+      specifier: ^5.90.5
+      version: 5.90.5
+    '@tanstack/react-query-devtools':
+      specifier: ^5.90.2
+      version: 5.90.2
+    '@trpc/client':
+      specifier: ^11.7.1
+      version: 11.7.1
+    '@trpc/react-query':
+      specifier: ^11.7.1
+      version: 11.7.1
+    '@trpc/server':
+      specifier: ^11.7.1
+      version: 11.7.1
+    '@trpc/tanstack-react-query':
+      specifier: ^11.7.1
+      version: 11.7.1
+    '@types/mdx':
+      specifier: ^2.0.13
+      version: 2.0.13
+    '@types/node':
+      specifier: ^24.9.1
+      version: 24.9.1
+    '@types/pg':
+      specifier: ^8.15.5
+      version: 8.15.5
+    '@types/react':
+      specifier: 19.2.2
+      version: 19.2.2
+    '@types/react-dom':
+      specifier: 19.2.2
+      version: 19.2.2
+    '@vercel/analytics':
+      specifier: ^1.5.0
+      version: 1.5.0
+    babel-plugin-react-compiler:
+      specifier: ^1.0.0
+      version: 1.0.0
     better-auth:
       specifier: ^1.3.30
       version: 1.3.30
+    class-variance-authority:
+      specifier: ^0.7.1
+      version: 0.7.1
+    clsx:
+      specifier: ^2.1.1
+      version: 2.1.1
     dotenv:
       specifier: ^17.2.3
       version: 17.2.3
+    fumadocs-core:
+      specifier: 16.0.1
+      version: 16.0.1
+    fumadocs-mdx:
+      specifier: 13.0.0
+      version: 13.0.0
+    fumadocs-ui:
+      specifier: 16.0.1
+      version: 16.0.1
+    hono:
+      specifier: ^4.10.3
+      version: 4.10.3
+    lucide-react:
+      specifier: ^0.546.0
+      version: 0.546.0
+    next:
+      specifier: 16.0.0
+      version: 16.0.0
+    next-themes:
+      specifier: ^0.4.6
+      version: 0.4.6
+    nuqs:
+      specifier: ^2.7.2
+      version: 2.7.2
+    pg:
+      specifier: 8.16.3
+      version: 8.16.3
+    postcss:
+      specifier: ^8.5.6
+      version: 8.5.6
+    prisma:
+      specifier: ^6.18.0
+      version: 6.18.0
+    react:
+      specifier: 19.2.0
+      version: 19.2.0
+    react-dom:
+      specifier: 19.2.0
+      version: 19.2.0
+    resend:
+      specifier: ^6.3.0
+      version: 6.3.0
+    sonner:
+      specifier: ^2.0.7
+      version: 2.0.7
+    tailwind-merge:
+      specifier: ^3.3.1
+      version: 3.3.1
+    tailwindcss:
+      specifier: ^4.1.16
+      version: 4.1.16
     tsdown:
       specifier: ^0.15.9
       version: 0.15.9
+    tsx:
+      specifier: ^4.20.6
+      version: 4.20.6
+    turbo:
+      specifier: ^2.5.8
+      version: 2.5.8
+    tw-animate-css:
+      specifier: ^1.4.0
+      version: 1.4.0
     typescript:
       specifier: ^5.9.3
       version: 5.9.3
+    ultracite:
+      specifier: 5.6.4
+      version: 5.6.4
+    wrangler:
+      specifier: ^4.45.0
+      version: 4.45.0
     zod:
       specifier: ^4.1.12
       version: 4.1.12
@@ -30,105 +168,96 @@ importers:
   .:
     dependencies:
       dotenv:
-        specifier: ^17.2.3
+        specifier: 'catalog:'
         version: 17.2.3
       zod:
-        specifier: ^4.1.12
+        specifier: 'catalog:'
         version: 4.1.12
     devDependencies:
       '@biomejs/biome':
-        specifier: 2.2.6
+        specifier: 'catalog:'
         version: 2.2.6
       '@types/node':
-        specifier: ^22.18.12
-        version: 22.18.12
+        specifier: 'catalog:'
+        version: 24.9.1
       tsdown:
-        specifier: ^0.15.9
+        specifier: 'catalog:'
         version: 0.15.9(typescript@5.9.3)
       tsx:
-        specifier: ^4.20.6
+        specifier: 'catalog:'
         version: 4.20.6
       turbo:
-        specifier: ^2.5.8
+        specifier: 'catalog:'
         version: 2.5.8
       ultracite:
-        specifier: 5.6.4
+        specifier: 'catalog:'
         version: 5.6.4(effect@3.18.4)(typescript@5.9.3)
 
   apps/app:
     dependencies:
+      '@fieldjolt/api':
+        specifier: workspace:*
+        version: link:../../packages/api
+      '@fieldjolt/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
+      '@fieldjolt/db':
+        specifier: workspace:*
+        version: link:../../packages/db
       '@fieldjolt/lib':
         specifier: workspace:*
         version: link:../../packages/lib
       '@fieldjolt/ui':
         specifier: workspace:*
         version: link:../../packages/ui
-      '@radix-ui/react-label':
-        specifier: ^2.1.7
-        version: 2.1.7(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      '@radix-ui/react-scroll-area':
-        specifier: ^1.2.10
-        version: 1.2.10(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      '@radix-ui/react-separator':
-        specifier: ^1.1.7
-        version: 1.1.7(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      '@radix-ui/react-slot':
-        specifier: ^1.2.3
-        version: 1.2.3(@types/react@19.2.2)(react@19.2.0)
+      '@prisma/adapter-pg':
+        specifier: 'catalog:'
+        version: 6.18.0
       '@tanstack/react-form':
-        specifier: ^1.23.8
+        specifier: 'catalog:'
         version: 1.23.8(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@tanstack/react-query':
-        specifier: ^5.90.5
+        specifier: 'catalog:'
         version: 5.90.5(react@19.2.0)
       '@vercel/analytics':
-        specifier: ^1.5.0
+        specifier: 'catalog:'
         version: 1.5.0(next@16.0.0(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)
       babel-plugin-react-compiler:
-        specifier: ^1.0.0
-        version: 1.0.0
-      better-auth:
         specifier: 'catalog:'
-        version: 1.3.30(next@16.0.0(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      class-variance-authority:
-        specifier: ^0.7.1
-        version: 0.7.1
+        version: 1.0.0
       lucide-react:
-        specifier: ^0.546.0
+        specifier: 'catalog:'
         version: 0.546.0(react@19.2.0)
       next:
-        specifier: 16.0.0
+        specifier: 'catalog:'
         version: 16.0.0(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       next-themes:
-        specifier: ^0.4.6
+        specifier: 'catalog:'
         version: 0.4.6(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       nuqs:
-        specifier: ^2.7.2
+        specifier: 'catalog:'
         version: 2.7.2(next@16.0.0(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)
+      pg:
+        specifier: 'catalog:'
+        version: 8.16.3
       react:
-        specifier: 19.2.0
+        specifier: 'catalog:'
         version: 19.2.0
       react-dom:
-        specifier: 19.2.0
+        specifier: 'catalog:'
         version: 19.2.0(react@19.2.0)
-      superjson:
-        specifier: ^2.2.3
-        version: 2.2.3
       zod:
         specifier: 'catalog:'
         version: 4.1.12
     devDependencies:
-      '@tanstack/react-query-devtools':
-        specifier: ^5.90.2
-        version: 5.90.2(@tanstack/react-query@5.90.5(react@19.2.0))(react@19.2.0)
       '@types/node':
-        specifier: ^20.19.23
-        version: 20.19.23
+        specifier: 'catalog:'
+        version: 24.9.1
       '@types/react':
-        specifier: 19.2.2
+        specifier: 'catalog:'
         version: 19.2.2
       '@types/react-dom':
-        specifier: 19.2.2
+        specifier: 'catalog:'
         version: 19.2.2(@types/react@19.2.2)
       typescript:
         specifier: 'catalog:'
@@ -137,59 +266,65 @@ importers:
   apps/docs:
     dependencies:
       fumadocs-core:
-        specifier: 16.0.1
+        specifier: 'catalog:'
         version: 16.0.1(@types/react@19.2.2)(lucide-react@0.546.0(react@19.2.0))(next@16.0.0(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       fumadocs-mdx:
-        specifier: 13.0.0
+        specifier: 'catalog:'
         version: 13.0.0(fumadocs-core@16.0.1(@types/react@19.2.2)(lucide-react@0.546.0(react@19.2.0))(next@16.0.0(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(next@16.0.0(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)
       fumadocs-ui:
-        specifier: 16.0.1
+        specifier: 'catalog:'
         version: 16.0.1(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lucide-react@0.546.0(react@19.2.0))(next@16.0.0(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(tailwindcss@4.1.16)
       lucide-react:
-        specifier: ^0.546.0
+        specifier: 'catalog:'
         version: 0.546.0(react@19.2.0)
       next:
-        specifier: 16.0.0
+        specifier: 'catalog:'
         version: 16.0.0(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       react:
-        specifier: ^19.2.0
+        specifier: 'catalog:'
         version: 19.2.0
       react-dom:
-        specifier: ^19.2.0
+        specifier: 'catalog:'
         version: 19.2.0(react@19.2.0)
     devDependencies:
       '@tailwindcss/postcss':
-        specifier: ^4.1.16
+        specifier: 'catalog:'
         version: 4.1.16
       '@types/mdx':
-        specifier: ^2.0.13
+        specifier: 'catalog:'
         version: 2.0.13
       '@types/node':
-        specifier: 24.9.1
+        specifier: 'catalog:'
         version: 24.9.1
       '@types/react':
-        specifier: ^19.2.2
+        specifier: 'catalog:'
         version: 19.2.2
       '@types/react-dom':
-        specifier: ^19.2.2
+        specifier: 'catalog:'
         version: 19.2.2(@types/react@19.2.2)
       postcss:
-        specifier: ^8.5.6
+        specifier: 'catalog:'
         version: 8.5.6
       tailwindcss:
-        specifier: ^4.1.16
+        specifier: 'catalog:'
         version: 4.1.16
       typescript:
-        specifier: ^5.9.3
+        specifier: 'catalog:'
         version: 5.9.3
 
   apps/server:
     dependencies:
+      '@fieldjolt/api':
+        specifier: workspace:*
+        version: link:../../packages/api
+      '@fieldjolt/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
       '@fieldjolt/db':
         specifier: workspace:*
         version: link:../../packages/db
       '@prisma/adapter-pg':
-        specifier: ^6.18.0
+        specifier: 'catalog:'
         version: 6.18.0
       better-auth:
         specifier: 'catalog:'
@@ -198,23 +333,20 @@ importers:
         specifier: 'catalog:'
         version: 17.2.3
       hono:
-        specifier: ^4.10.3
+        specifier: 'catalog:'
         version: 4.10.3
       pg:
-        specifier: ^8.16.3
+        specifier: 'catalog:'
         version: 8.16.3
-      resend:
-        specifier: ^6.3.0
-        version: 6.3.0
       zod:
         specifier: 'catalog:'
         version: 4.1.12
     devDependencies:
       '@types/node':
-        specifier: ^22.18.12
-        version: 22.18.12
+        specifier: 'catalog:'
+        version: 24.9.1
       '@types/pg':
-        specifier: ^8.15.5
+        specifier: 'catalog:'
         version: 8.15.5
       tsdown:
         specifier: 'catalog:'
@@ -223,7 +355,7 @@ importers:
         specifier: 'catalog:'
         version: 5.9.3
       wrangler:
-        specifier: ^4.45.0
+        specifier: 'catalog:'
         version: 4.45.0
 
   apps/web:
@@ -232,56 +364,139 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@tanstack/react-form':
-        specifier: ^1.23.8
+        specifier: 'catalog:'
         version: 1.23.8(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@tanstack/react-query':
-        specifier: ^5.90.5
+        specifier: 'catalog:'
         version: 5.90.5(react@19.2.0)
       '@vercel/analytics':
-        specifier: ^1.5.0
+        specifier: 'catalog:'
         version: 1.5.0(next@16.0.0(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)
       babel-plugin-react-compiler:
-        specifier: ^1.0.0
+        specifier: 'catalog:'
         version: 1.0.0
       lucide-react:
-        specifier: ^0.546.0
+        specifier: 'catalog:'
         version: 0.546.0(react@19.2.0)
       next:
-        specifier: 16.0.0
+        specifier: 'catalog:'
         version: 16.0.0(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       next-themes:
-        specifier: ^0.4.6
+        specifier: 'catalog:'
         version: 0.4.6(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       react:
-        specifier: 19.2.0
+        specifier: 'catalog:'
         version: 19.2.0
       react-dom:
-        specifier: 19.2.0
+        specifier: 'catalog:'
         version: 19.2.0(react@19.2.0)
       zod:
         specifier: 'catalog:'
         version: 4.1.12
     devDependencies:
-      '@tanstack/react-query-devtools':
-        specifier: ^5.90.2
-        version: 5.90.2(@tanstack/react-query@5.90.5(react@19.2.0))(react@19.2.0)
       '@types/node':
-        specifier: ^20.19.23
-        version: 20.19.23
+        specifier: 'catalog:'
+        version: 24.9.1
       '@types/react':
-        specifier: 19.2.2
+        specifier: 'catalog:'
         version: 19.2.2
       '@types/react-dom':
-        specifier: 19.2.2
+        specifier: 'catalog:'
         version: 19.2.2(@types/react@19.2.2)
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
 
+  packages/api:
+    dependencies:
+      '@fieldjolt/auth':
+        specifier: workspace:*
+        version: link:../auth
+      '@fieldjolt/db':
+        specifier: workspace:*
+        version: link:../db
+      '@hono/trpc-server':
+        specifier: ^0.4.0
+        version: 0.4.0(@trpc/server@11.7.1(typescript@5.9.3))(hono@4.10.3)
+      '@tanstack/react-query':
+        specifier: 'catalog:'
+        version: 5.90.5(react@19.2.0)
+      '@tanstack/react-query-devtools':
+        specifier: 'catalog:'
+        version: 5.90.2(@tanstack/react-query@5.90.5(react@19.2.0))(react@19.2.0)
+      '@trpc/client':
+        specifier: 'catalog:'
+        version: 11.7.1(@trpc/server@11.7.1(typescript@5.9.3))(typescript@5.9.3)
+      '@trpc/react-query':
+        specifier: 'catalog:'
+        version: 11.7.1(@tanstack/react-query@5.90.5(react@19.2.0))(@trpc/client@11.7.1(@trpc/server@11.7.1(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.7.1(typescript@5.9.3))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
+      '@trpc/server':
+        specifier: 'catalog:'
+        version: 11.7.1(typescript@5.9.3)
+      '@trpc/tanstack-react-query':
+        specifier: 'catalog:'
+        version: 11.7.1(@tanstack/react-query@5.90.5(react@19.2.0))(@trpc/client@11.7.1(@trpc/server@11.7.1(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.7.1(typescript@5.9.3))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
+      better-auth:
+        specifier: 'catalog:'
+        version: 1.3.30(next@16.0.0(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      client-only:
+        specifier: ^0.0.1
+        version: 0.0.1
+      dotenv:
+        specifier: 'catalog:'
+        version: 17.2.3
+      next:
+        specifier: 'catalog:'
+        version: 16.0.0(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      server-only:
+        specifier: ^0.0.1
+        version: 0.0.1
+      superjson:
+        specifier: ^2.2.5
+        version: 2.2.5
+      typescript:
+        specifier: ^5
+        version: 5.9.3
+      zod:
+        specifier: 'catalog:'
+        version: 4.1.12
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.9.1
+      tsdown:
+        specifier: 'catalog:'
+        version: 0.15.9(typescript@5.9.3)
+
+  packages/auth:
+    dependencies:
+      '@fieldjolt/db':
+        specifier: workspace:*
+        version: link:../db
+      '@fieldjolt/lib':
+        specifier: workspace:*
+        version: link:../lib
+      better-auth:
+        specifier: 'catalog:'
+        version: 1.3.30(next@16.0.0(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      dotenv:
+        specifier: 'catalog:'
+        version: 17.2.3
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+      zod:
+        specifier: 'catalog:'
+        version: 4.1.12
+    devDependencies:
+      tsdown:
+        specifier: 'catalog:'
+        version: 0.15.9(typescript@5.9.3)
+
   packages/db:
     dependencies:
       '@prisma/adapter-pg':
-        specifier: ^6.18.0
+        specifier: 'catalog:'
         version: 6.18.0
       '@prisma/client':
         specifier: 'catalog:'
@@ -290,14 +505,14 @@ importers:
         specifier: 'catalog:'
         version: 17.2.3
       typescript:
-        specifier: ^5
+        specifier: 'catalog:'
         version: 5.9.3
       zod:
         specifier: 'catalog:'
         version: 4.1.12
     devDependencies:
       prisma:
-        specifier: ^6.18.0
+        specifier: 'catalog:'
         version: 6.18.0(typescript@5.9.3)
       tsdown:
         specifier: 'catalog:'
@@ -305,72 +520,79 @@ importers:
 
   packages/lib:
     dependencies:
-      hono:
-        specifier: ^4.10.3
-        version: 4.10.3
-      nuqs:
-        specifier: ^2.7.2
-        version: 2.7.2(next@16.0.0(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)
+      resend:
+        specifier: 'catalog:'
+        version: 6.3.0
+    devDependencies:
+      tsdown:
+        specifier: 'catalog:'
+        version: 0.15.9(typescript@5.9.3)
 
   packages/ui:
     dependencies:
       '@radix-ui/react-dropdown-menu':
-        specifier: ^2.1.16
+        specifier: 'catalog:'
         version: 2.1.16(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@radix-ui/react-label':
-        specifier: ^2.1.7
+        specifier: 'catalog:'
         version: 2.1.7(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@radix-ui/react-scroll-area':
+        specifier: 'catalog:'
+        version: 1.2.10(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@radix-ui/react-separator':
+        specifier: 'catalog:'
+        version: 1.1.7(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@radix-ui/react-slot':
-        specifier: ^1.2.3
+        specifier: 'catalog:'
         version: 1.2.3(@types/react@19.2.2)(react@19.2.0)
       class-variance-authority:
-        specifier: ^0.7.1
+        specifier: 'catalog:'
         version: 0.7.1
       clsx:
-        specifier: ^2.1.1
+        specifier: 'catalog:'
         version: 2.1.1
       lucide-react:
-        specifier: ^0.546.0
+        specifier: 'catalog:'
         version: 0.546.0(react@19.2.0)
       next-themes:
-        specifier: ^0.4.6
+        specifier: 'catalog:'
         version: 0.4.6(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       react:
-        specifier: ^19.2.0
+        specifier: 'catalog:'
         version: 19.2.0
       react-dom:
-        specifier: ^19.2.0
+        specifier: 'catalog:'
         version: 19.2.0(react@19.2.0)
       sonner:
-        specifier: ^2.0.7
+        specifier: 'catalog:'
         version: 2.0.7(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       tailwind-merge:
-        specifier: ^3.3.1
+        specifier: 'catalog:'
         version: 3.3.1
       tw-animate-css:
-        specifier: ^1.4.0
+        specifier: 'catalog:'
         version: 1.4.0
       zod:
-        specifier: ^3.25.76
-        version: 3.25.76
+        specifier: 'catalog:'
+        version: 4.1.12
     devDependencies:
       '@tailwindcss/postcss':
-        specifier: ^4.1.16
+        specifier: 'catalog:'
         version: 4.1.16
       '@types/node':
-        specifier: ^20.19.23
-        version: 20.19.23
+        specifier: 'catalog:'
+        version: 24.9.1
       '@types/react':
-        specifier: ^19.2.2
+        specifier: 'catalog:'
         version: 19.2.2
       '@types/react-dom':
-        specifier: ^19.2.2
+        specifier: 'catalog:'
         version: 19.2.2(@types/react@19.2.2)
       tailwindcss:
-        specifier: ^4.1.16
+        specifier: 'catalog:'
         version: 4.1.16
       typescript:
-        specifier: ^5.9.3
+        specifier: 'catalog:'
         version: 5.9.3
 
 packages:
@@ -860,6 +1082,13 @@ packages:
 
   '@hexagon/base64@1.1.28':
     resolution: {integrity: sha512-lhqDEAvWixy3bZ+UOYbPwUbBkwBq5C1LAJ/xPC8Oi+lL54oyakv/npbA0aU2hgCsx/1NUd4IBvV03+aUBWxerw==}
+
+  '@hono/trpc-server@0.4.0':
+    resolution: {integrity: sha512-LGlJfCmNIGMwcknZEIYdujVMs9OkNVazhpOhaz3kTWOXvNL660VOHpvvktosCiJrajyBY1RtIJKQ+IKaQvNuSg==}
+    engines: {node: '>=16.0.0'}
+    peerDependencies:
+      '@trpc/server': ^10.10.0 || >11.0.0-rc
+      hono: '>=4.*'
 
   '@img/colour@1.0.0':
     resolution: {integrity: sha512-A5P/LfWGFSl6nsckYtjw9da+19jB8hkJ6ACTGcDfEJ0aE+l2n2El7dsVM7UVHZQ9s2lmYMWlrS21YLy2IR1LUw==}
@@ -1948,9 +2177,35 @@ packages:
   '@tanstack/store@0.7.7':
     resolution: {integrity: sha512-xa6pTan1bcaqYDS9BDpSiS63qa6EoDkPN9RsRaxHuDdVDNntzq3xNwR5YKTU/V3SkSyC9T4YVOPh2zRQN0nhIQ==}
 
-  '@trpc/server@11.6.0':
-    resolution: {integrity: sha512-skTso0AWbOZck40jwNeYv++AMZXNWLUWdyk+pB5iVaYmEKTuEeMoPrEudR12VafbEU6tZa8HK3QhBfTYYHDCdg==}
+  '@trpc/client@11.7.1':
+    resolution: {integrity: sha512-uOnAjElKI892/U6aQMcBHYs3x7mme3Cvv1F87ytBL56rBvs7+DyK7r43zgaXKf13+GtPEI6ex5xjVUfyDW8XcQ==}
     peerDependencies:
+      '@trpc/server': 11.7.1
+      typescript: '>=5.7.2'
+
+  '@trpc/react-query@11.7.1':
+    resolution: {integrity: sha512-dEHDjIqSTzO8nLlCbtiFBMBwhbSkK1QP7aYVo3nP3sYBna0b+iCtrPXdxVPCSopr9/aIqDTEh+dMRZa7yBgjfQ==}
+    peerDependencies:
+      '@tanstack/react-query': ^5.80.3
+      '@trpc/client': 11.7.1
+      '@trpc/server': 11.7.1
+      react: '>=18.2.0'
+      react-dom: '>=18.2.0'
+      typescript: '>=5.7.2'
+
+  '@trpc/server@11.7.1':
+    resolution: {integrity: sha512-N3U8LNLIP4g9C7LJ/sLkjuPHwqlvE3bnspzC4DEFVdvx2+usbn70P80E3wj5cjOTLhmhRiwJCSXhlB+MHfGeCw==}
+    peerDependencies:
+      typescript: '>=5.7.2'
+
+  '@trpc/tanstack-react-query@11.7.1':
+    resolution: {integrity: sha512-qc7kz4NY7CCvCxLy5HGptfKd3e3yJnWmTd6/Gkr4IY8B73PNFmcHKvLWE4kzU7r+R72MfT57TXrCEJ7ErLSMtw==}
+    peerDependencies:
+      '@tanstack/react-query': ^5.80.3
+      '@trpc/client': 11.7.1
+      '@trpc/server': 11.7.1
+      react: '>=18.2.0'
+      react-dom: '>=18.2.0'
       typescript: '>=5.7.2'
 
   '@tybys/wasm-util@0.10.1':
@@ -1976,9 +2231,6 @@ packages:
 
   '@types/ms@2.1.0':
     resolution: {integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==}
-
-  '@types/node@20.19.23':
-    resolution: {integrity: sha512-yIdlVVVHXpmqRhtyovZAcSy0MiPcYWGkoO4CGe/+jpP0hmNuihm4XhHbADpK++MsiLHP5MVlv+bcgdF99kSiFQ==}
 
   '@types/node@22.18.12':
     resolution: {integrity: sha512-BICHQ67iqxQGFSzfCFTT7MRQ5XcBjG5aeKh5Ok38UBbPe5fxTyE+aHFxwVrGyr8GNlqFMLKD1D3P2K/1ks8tog==}
@@ -3165,6 +3417,9 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
+  server-only@0.0.1:
+    resolution: {integrity: sha512-qepMx2JxAa5jjfzxG79yPPq+8BuFToHd1hm7kI+Z4zAq1ftQiP7HcxMhDDItrbtwVeLg/cY2JnKnrcFkmiswNA==}
+
   set-cookie-parser@2.7.1:
     resolution: {integrity: sha512-IOc8uWeOZgnb3ptbCURJWNjWUPcO3ZnTTdzsurqERrP6nPyv+paC55vJM0LpOlT2ne+Ix+9+CRG1MNLlyZ4GjQ==}
 
@@ -3232,8 +3487,8 @@ packages:
       babel-plugin-macros:
         optional: true
 
-  superjson@2.2.3:
-    resolution: {integrity: sha512-ay3d+LW/S6yppKoTz3Bq4mG0xrS5bFwfWEBmQfbC7lt5wmtk+Obq0TxVuA9eYRirBTQb1K3eEpBRHMQEo0WyVw==}
+  superjson@2.2.5:
+    resolution: {integrity: sha512-zWPTX96LVsA/eVYnqOM2+ofcdPqdS1dAF1LN4TS2/MWuUpfitd9ctTa87wt4xrYnZnkLtS69xpBdSxVBP5Rm6w==}
     engines: {node: '>=16'}
 
   supports-color@10.2.2:
@@ -3504,9 +3759,6 @@ packages:
 
   zod@3.22.3:
     resolution: {integrity: sha512-EjIevzuJRiRPbVH4mGc8nApb/lVLKVpmUhAaR5R5doKGfAnGJ6Gr3CViAVjP+4FWSxCsybeWQdcgCtbX+7oZug==}
-
-  zod@3.25.76:
-    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
   zod@4.1.12:
     resolution: {integrity: sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ==}
@@ -3830,6 +4082,11 @@ snapshots:
       tslib: 2.8.1
 
   '@hexagon/base64@1.1.28': {}
+
+  '@hono/trpc-server@0.4.0(@trpc/server@11.7.1(typescript@5.9.3))(hono@4.10.3)':
+    dependencies:
+      '@trpc/server': 11.7.1(typescript@5.9.3)
+      hono: 4.10.3
 
   '@img/colour@1.0.0':
     optional: true
@@ -4893,8 +5150,31 @@ snapshots:
 
   '@tanstack/store@0.7.7': {}
 
-  '@trpc/server@11.6.0(typescript@5.9.3)':
+  '@trpc/client@11.7.1(@trpc/server@11.7.1(typescript@5.9.3))(typescript@5.9.3)':
     dependencies:
+      '@trpc/server': 11.7.1(typescript@5.9.3)
+      typescript: 5.9.3
+
+  '@trpc/react-query@11.7.1(@tanstack/react-query@5.90.5(react@19.2.0))(@trpc/client@11.7.1(@trpc/server@11.7.1(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.7.1(typescript@5.9.3))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3)':
+    dependencies:
+      '@tanstack/react-query': 5.90.5(react@19.2.0)
+      '@trpc/client': 11.7.1(@trpc/server@11.7.1(typescript@5.9.3))(typescript@5.9.3)
+      '@trpc/server': 11.7.1(typescript@5.9.3)
+      react: 19.2.0
+      react-dom: 19.2.0(react@19.2.0)
+      typescript: 5.9.3
+
+  '@trpc/server@11.7.1(typescript@5.9.3)':
+    dependencies:
+      typescript: 5.9.3
+
+  '@trpc/tanstack-react-query@11.7.1(@tanstack/react-query@5.90.5(react@19.2.0))(@trpc/client@11.7.1(@trpc/server@11.7.1(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.7.1(typescript@5.9.3))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3)':
+    dependencies:
+      '@tanstack/react-query': 5.90.5(react@19.2.0)
+      '@trpc/client': 11.7.1(@trpc/server@11.7.1(typescript@5.9.3))(typescript@5.9.3)
+      '@trpc/server': 11.7.1(typescript@5.9.3)
+      react: 19.2.0
+      react-dom: 19.2.0(react@19.2.0)
       typescript: 5.9.3
 
   '@tybys/wasm-util@0.10.1':
@@ -4924,10 +5204,6 @@ snapshots:
 
   '@types/ms@2.1.0': {}
 
-  '@types/node@20.19.23':
-    dependencies:
-      undici-types: 6.21.0
-
   '@types/node@22.18.12':
     dependencies:
       undici-types: 6.21.0
@@ -4938,7 +5214,7 @@ snapshots:
 
   '@types/pg@8.15.5':
     dependencies:
-      '@types/node': 22.18.12
+      '@types/node': 24.9.1
       pg-protocol: 1.10.3
       pg-types: 2.2.0
 
@@ -6411,6 +6687,8 @@ snapshots:
 
   semver@7.7.3: {}
 
+  server-only@0.0.1: {}
+
   set-cookie-parser@2.7.1: {}
 
   sharp@0.33.5:
@@ -6519,7 +6797,7 @@ snapshots:
       client-only: 0.0.1
       react: 19.2.0
 
-  superjson@2.2.3:
+  superjson@2.2.5:
     dependencies:
       copy-anything: 4.0.5
 
@@ -6553,11 +6831,11 @@ snapshots:
 
   trough@2.2.0: {}
 
-  trpc-cli@0.11.0(@trpc/server@11.6.0(typescript@5.9.3))(effect@3.18.4)(zod@4.1.12):
+  trpc-cli@0.11.0(@trpc/server@11.7.1(typescript@5.9.3))(effect@3.18.4)(zod@4.1.12):
     dependencies:
       commander: 14.0.1
     optionalDependencies:
-      '@trpc/server': 11.6.0(typescript@5.9.3)
+      '@trpc/server': 11.7.1(typescript@5.9.3)
       effect: 3.18.4
       zod: 4.1.12
 
@@ -6637,11 +6915,11 @@ snapshots:
   ultracite@5.6.4(effect@3.18.4)(typescript@5.9.3):
     dependencies:
       '@clack/prompts': 0.11.0
-      '@trpc/server': 11.6.0(typescript@5.9.3)
+      '@trpc/server': 11.7.1(typescript@5.9.3)
       deepmerge: 4.3.1
       jsonc-parser: 3.3.1
       nypm: 0.6.2
-      trpc-cli: 0.11.0(@trpc/server@11.6.0(typescript@5.9.3))(effect@3.18.4)(zod@4.1.12)
+      trpc-cli: 0.11.0(@trpc/server@11.7.1(typescript@5.9.3))(effect@3.18.4)(zod@4.1.12)
       zod: 4.1.12
     transitivePeerDependencies:
       - '@orpc/server'
@@ -6795,8 +7073,6 @@ snapshots:
       youch-core: 0.3.3
 
   zod@3.22.3: {}
-
-  zod@3.25.76: {}
 
   zod@4.1.12: {}
 
