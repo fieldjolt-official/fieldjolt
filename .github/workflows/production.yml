@@ -1,0 +1,61 @@
+# .github/workflows/db-push.yml
+name: Push Schema to PlanetScale
+
+on:
+  push:
+    branches:
+      - main  # Runs on push to main
+    paths:
+      - 'packages/db/schema.prisma'  # Only runs when schema changes
+  workflow_dispatch:  # Allows manual trigger from GitHub UI
+
+jobs:
+  push-schema:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: pnpm --filter @fieldjolt/db exec prisma generate
+
+      - name: Push schema to PlanetScale
+        run: pnpm --filter @fieldjolt/db exec prisma db push --accept-data-loss
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Notify on success
+        if: success()
+        run: echo "✅ Schema successfully pushed to PlanetScale Postgres"
+
+      - name: Notify on failure
+        if: failure()
+        run: echo "❌ Failed to push schema to PlanetScale Postgres"
