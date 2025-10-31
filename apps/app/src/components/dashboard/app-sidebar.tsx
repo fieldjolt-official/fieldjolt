@@ -1,9 +1,9 @@
 import type { AuthUser } from "@fieldjolt/auth";
 import { Sidebar, SidebarContent } from "@fieldjolt/ui/components/sidebar";
 import type { Organization } from "@/lib/db/get-organization";
-import { AppSidebarFooter } from "./SidebarFooter";
-import { AppSidebarHeader } from "./SidebarHeader";
-import { SidebarItems } from "./SidebarItems";
+import { AppSidebarFooter } from "./sidebar-footer";
+import { AppSidebarHeader } from "./sidebar-header";
+import { SidebarItems } from "./sidebar-items";
 
 export function AppSidebar({
   user,
