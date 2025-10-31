@@ -15,7 +15,13 @@ app.use(
   "*",
   cors({
     origin: (_origin, c) => c.env.CORS_ORIGIN || "",
-    allowHeaders: ["Content-Type", "Authorization", "Cookie"],
+    allowHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Cookie",
+      "trpc-accept",
+      "x-trpc-source",
+    ],
     allowMethods: ["POST", "GET", "PATCH", "PUT", "DELETE", "OPTIONS"],
     exposeHeaders: ["Content-Length", "Set-Cookie"],
     maxAge: 600,
@@ -28,10 +34,6 @@ app.get("/health", (c) => c.json({ status: "ok" }));
 
 app.on(["POST", "GET"], "/auth/*", async (c) => {
   const prisma = c.get("prisma");
-
-  console.log("NODE_ENV", c.env.NODE_ENV);
-  console.log("BETTER_AUTH_URL", c.env.BETTER_AUTH_URL);
-  console.log("CORS_ORIGIN", c.env.CORS_ORIGIN);
 
   const auth = createAuth({
     environment: c.env.NODE_ENV,

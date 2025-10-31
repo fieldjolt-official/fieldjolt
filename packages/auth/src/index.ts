@@ -1,6 +1,6 @@
 import type { PrismaClient } from "@fieldjolt/db/cloudflare";
 import { getResend } from "@fieldjolt/lib/resend";
-import { type BetterAuthOptions, betterAuth } from "better-auth";
+import { type BetterAuthOptions, betterAuth, type User } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { lastLoginMethod, magicLink } from "better-auth/plugins";
 
@@ -74,3 +74,4 @@ export function createAuth(config: CreateAuthConfig) {
 }
 
 export type Auth = ReturnType<typeof createAuth>;
+export type AuthUser = User;

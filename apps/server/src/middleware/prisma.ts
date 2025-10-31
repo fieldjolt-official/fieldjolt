@@ -17,7 +17,5 @@ export const prismaMiddleware = createFactory<HonoEnv>().createMiddleware(
     c.set("prisma", prisma);
 
     await next();
-
-    c.executionCtx.waitUntil(pool.end());
   }
 );
