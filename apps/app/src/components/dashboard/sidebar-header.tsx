@@ -1,24 +1,27 @@
 "use client";
 
-import { useQuery, useTRPC } from "@fieldjolt/api/react";
 import {
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@fieldjolt/ui/components/sidebar";
-import { Skeleton } from "@fieldjolt/ui/components/skeleton";
 import { Building2 } from "lucide-react";
+import type { Organization } from "@/lib/db/get-organization";
 
-export function AppSidebarHeader({ orgSlug }: { orgSlug: string }) {
-  const trpc = useTRPC();
+export function AppSidebarHeader({
+  organizations,
+  orgSlug,
+}: {
+  organizations: Organization[];
+  orgSlug: string;
+}) {
+  const currentOrg = organizations.find(
+    (org) => org.organization.slug === orgSlug
+  );
 
-  const { data } = useQuery(trpc.users.organizations.queryOptions());
-
-  const currentOrg = data?.find((org) => org.organization.slug === orgSlug);
-
-  if (!data) {
-    return <AppSidebarHeaderSkeleton />;
+  if (!currentOrg) {
+    return null;
   }
 
   return (
@@ -40,14 +43,6 @@ export function AppSidebarHeader({ orgSlug }: { orgSlug: string }) {
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>
-    </SidebarHeader>
-  );
-}
-
-function AppSidebarHeaderSkeleton() {
-  return (
-    <SidebarHeader>
-      <Skeleton className="size-12 w-full" />
     </SidebarHeader>
   );
 }

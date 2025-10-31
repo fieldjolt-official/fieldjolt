@@ -1,5 +1,5 @@
 import { SidebarInset } from "@fieldjolt/ui/components/sidebar";
-import { SidebarPageWrapper } from "@/components/dashboard/SidebarPageWrapper";
+import { SidebarPageWrapper } from "@/components/dashboard/sidebar-page-wrapper";
 
 export default function OrganizationDashboard() {
   return (

@@ -9,11 +9,6 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/auth", request.url));
   }
 
-  // if user is at /auth and has a session cookie, redirect to /
-  // if (sessionCookie && request.nextUrl.pathname.startsWith("/auth")) {
-  //   return NextResponse.redirect(new URL("/", request.url));
-  // }
-
   return NextResponse.next();
 }
 
@@ -24,7 +19,9 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
+     * - api (api routes)
+     * - auth (auth routes)
      */
-    "/((?!_next/static|_next/image|favicon.ico).*)",
+    "/((?!_next/static|_next/image|favicon.ico|api|auth).*)",
   ],
 };

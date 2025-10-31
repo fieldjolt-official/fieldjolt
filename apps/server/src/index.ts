@@ -32,20 +32,6 @@ app.use("*", prismaMiddleware);
 
 app.get("/health", (c) => c.json({ status: "ok" }));
 
-app.on(["POST", "GET"], "/auth/*", async (c) => {
-  const prisma = c.get("prisma");
-
-  const auth = createAuth({
-    environment: c.env.NODE_ENV,
-    database: prisma,
-    baseURL: c.env.BETTER_AUTH_URL,
-    trustedOrigins: [c.env.CORS_ORIGIN, c.env.BETTER_AUTH_URL],
-    resendApiKey: c.env.RESEND_API_KEY,
-  });
-
-  return await auth.handler(c.req.raw);
-});
-
 app.use(
   "/trpc/*",
   trpcServer({
@@ -57,8 +43,7 @@ app.use(
         environment: c.env.NODE_ENV,
         database: prisma,
         baseURL: c.env.BETTER_AUTH_URL,
-        trustedOrigins: [c.env.CORS_ORIGIN, c.env.BETTER_AUTH_URL],
-        resendApiKey: c.env.RESEND_API_KEY,
+        trustedOrigins: [c.env.CORS_ORIGIN],
       });
 
       const session = await auth.api.getSession({

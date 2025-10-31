@@ -43,6 +43,8 @@ export default function AuthPage() {
             callbackURL: `${getBaseUrl()}/`,
           });
 
+          console.log(result);
+
           if (result.error) {
             toast.error(result.error.message || "Invalid email or password");
           } else {

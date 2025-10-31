@@ -7,8 +7,8 @@
     "production": {
       "vars": {
         "NODE_ENV": "production",
-        "BETTER_AUTH_URL": "https://auth.fieldjolt.com",
-        "CORS_ORIGIN": "https://api.fieldjolt.com"
+        "BETTER_AUTH_URL": "https://api.fieldjolt.com",
+        "CORS_ORIGIN": "https://app.fieldjolt.com"
       }
     }
   },
